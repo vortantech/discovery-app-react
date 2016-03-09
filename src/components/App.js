@@ -1,6 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router'
 import {getClient} from '../services/contentfulClient'
+import CSSModules from 'react-css-modules'
+import styles from './App.css'
 
 function nav () {
   if (getClient()) {
@@ -8,6 +10,7 @@ function nav () {
       <ul>
         <li><Link to='/entries'>Entries</Link></li>
         <li><Link to='/assets'>Assets</Link></li>
+        <li><Link to='/'>Settings</Link></li>
       </ul>
     )
   } else {
@@ -15,12 +18,15 @@ function nav () {
   }
 }
 
-export default function App (props) {
+function App (props) {
   return (
-    <div>
-      <h1><Link to='/'>Discovery app</Link></h1>
-      {nav()}
+    <div styleName='app-container'>
+      <nav>
+        {nav()}
+      </nav>
       {props.children}
     </div>
   )
 }
+
+export default CSSModules(App, styles)

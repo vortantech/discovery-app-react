@@ -1,0 +1,18 @@
+.app-container {
+  min-width: 700px;
+}
+
+.app-container nav {
+  border-bottom: 2px solid black;
+}
+
+.app-container nav ul {
+  display: flex;
+  justify-content: center;
+}
+
+.app-container nav li {
+  list-style: none;
+  display: inline;
+  margin: 20px;
+}

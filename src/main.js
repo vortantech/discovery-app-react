@@ -38,15 +38,21 @@ function requireCredentials (nextState, replace, next) {
   if (!getClient()) {
     localforage.getItem('credentials')
     .then(
-      (credentials) => initializeClient(credentials, next, replace),
-      () => {
-        replace('/')
-        next()
-      }
+      (credentials) => {
+        credentials
+          ? initializeClient(credentials, next, replace)
+          : goToRoot(replace, next)
+      },
+      () => goToRoot(replace, next)
     )
   } else {
     next()
   }
+}
+
+function goToRoot (replace, next) {
+  replace('/')
+  next()
 }
 
 /**

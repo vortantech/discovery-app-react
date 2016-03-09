@@ -1,0 +1,23 @@
+.list-container {
+  display: flex;
+}
+
+.list {
+  border-right: 2px solid black;
+  width: 200px;
+}
+
+.list ul {
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.list-item-contents {
+  width: 500px;
+}

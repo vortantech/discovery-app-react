@@ -6,9 +6,8 @@ export default function EntryListItem ({item}) {
   return (
     <li>
       <Link to={`/entries/by-content-type/${item.sys.contentType.sys.id}/${item.sys.id}`}>
-        {item.fields[contentType.displayField]}
+        <h3>{item.fields[contentType.displayField]}</h3>
       </Link>
-      <p>{item.description}</p>
     </li>
   )
 }

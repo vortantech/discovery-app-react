@@ -44,7 +44,7 @@ export default createClass({
     } else {
       let entryElement
       let backNavLink = <Link to='/entries/by-content-type'>Back</Link>
-      let contentTypeTitle = <h3>{this.state.entries.items[0].sys.contentType.name}</h3>
+      let listTitle = <h3>{this.state.entries.items[0].sys.contentType.name}</h3>
       if (this.props.params.entryId) {
         const entry = this.findEntry(this.props.params.entryId)
         entryElement = <Entry entry={entry} />
@@ -53,7 +53,7 @@ export default createClass({
         items={this.state.entries.items}
         ListView={EntryListItem}
         NavView={backNavLink}
-        TitleView={contentTypeTitle}
+        TitleView={listTitle}
         ContentView={entryElement}
         />
     }

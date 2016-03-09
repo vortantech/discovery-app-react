@@ -31,9 +31,11 @@ export default createClass({
     if (this.state.phase === 'loading') {
       return <p>Loading your Content Types...</p>
     } else {
+      let listTitle = <h3>Content Types</h3>
       return <TwoPanelList
         items={this.state.contentTypes.items}
         ListView={ContentTypeListItem}
+        TitleView={listTitle}
         />
     }
   }
