@@ -1,0 +1,13 @@
+.list-container {
+  display: flex;
+}
+
+.list {
+  border: 1px solid black;
+  width: 200px;
+}
+
+.list-item-contents {
+  border: 1px solid blue;
+  width: 500px;
+}
