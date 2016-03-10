@@ -9,7 +9,7 @@ import SettingsContainer from './components/settings/SettingsContainer'
 import ContentTypesContainer from './components/content-types/ContentTypesContainer'
 import EntriesContainer from './components/entries/EntriesContainer'
 import Entry from './components/entries/Entry'
-import Assets from './components/assets/Assets'
+import AssetsContainer from './components/assets/AssetsContainer'
 import Asset from './components/assets/Asset'
 import Error from './components/Error'
 
@@ -22,7 +22,7 @@ render((
         <Route path=':entryId' component={Entry} onEnter={requireCredentials}/>
       </Route>
       <Redirect from='entries' to='entries/by-content-type'/>
-      <Route path='assets' component={Assets} onEnter={requireCredentials}/>
+      <Route path='assets' component={AssetsContainer} onEnter={requireCredentials}/>
       <Route path='assets/:assetId' component={Asset} onEnter={requireCredentials}/>
       <Route path='error' component={Error}/>
     </Route>

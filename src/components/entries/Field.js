@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import Thumbnail from '../assets/Thumbnail'
 
 export default function Field ({definition, content}) {
   return (
@@ -16,17 +17,19 @@ export default function Field ({definition, content}) {
  */
 function renderContent (content, definition) {
   const {type, linkType} = definition
-  if (type === 'Link' && linkType === 'Entry') {
+  if (!content) {
+    return <p>No content</p>
+  } else if (type === 'Link' && linkType === 'Entry') {
     return renderEntryLink(content)
-  } if (type === 'Link' && linkType === 'Asset') {
+  } else if (type === 'Link' && linkType === 'Asset') {
     return renderAssetLink(content)
-  } if (type === 'Array' && Array.isArray(content)) {
+  } else if (type === 'Array' && Array.isArray(content)) {
     return renderList(content, definition.items)
-  } if (type === 'Location' && isLocation(content)) {
+  } else if (type === 'Location' && isLocation(content)) {
     return renderLocation(content)
-  } if (type === 'Object') {
+  } else if (type === 'Object') {
     return renderObject(content)
-  } if (type === 'Boolean') {
+  } else if (type === 'Boolean') {
     return renderBoolean(content)
   } else {
     return <p>{content}</p>
@@ -40,14 +43,8 @@ function renderEntryLink (content) {
 
 function renderAssetLink (content) {
   return <Link to={`/assets/${content.sys.id}`}>
-    {renderFile(content.fields.file.url, content.fields.file.fileName)}
+    <Thumbnail url={content.fields.file.url} fileName={content.fields.file.fileName} />
   </Link>
-}
-
-function renderFile (url, fileName) {
-  return /^\/\/images\./.test(url)
-    ? <img src={`${url}?w=70&h=70&fit=thumb`} alt={fileName} title={fileName} />
-    : fileName
 }
 
 function renderList (list, definition) {
