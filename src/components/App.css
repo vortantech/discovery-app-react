@@ -1,18 +1,53 @@
+.centered-container {
+  width: 700px;
+  margin: 0 auto;
+}
+
 .app-container {
-  min-width: 700px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .app-container nav {
-  border-bottom: 2px solid black;
+  background: #192532;
+}
+
+.nav-container {
+  composes: centered-container;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0px;
 }
 
 .app-container nav ul {
   display: flex;
   justify-content: center;
+  padding-top: 2px;
 }
 
 .app-container nav li {
   list-style: none;
-  display: inline;
-  margin: 20px;
+  margin-left: 20px;
+}
+
+.app-container nav a {
+  display: inline-block;
+  color: rgba(255,255,255,0.75);
+  border-bottom: none;
+}
+
+.app-container nav a:hover {
+  color: white;
+}
+
+.content-container {
+  padding-top: 40px;
+  composes: centered-container;
 }

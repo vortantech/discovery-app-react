@@ -1,0 +1,43 @@
+.field {
+  margin-bottom: 25px;
+}
+
+.image-link {
+  border-bottom: none;
+}
+
+.entries-list {}
+
+.entries-item {}
+
+.asset-list {
+  display: flex;
+}
+
+.asset-item {
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.symbol-list {
+  display: flex;
+}
+
+.symbol-list > div {
+}
+
+.symbol-item {
+  margin-right: 5px;
+}
+
+.symbol-item > p:after {
+  content: ','
+}
+
+.symbol-item:last-child > p:after {
+  content: ''
+}

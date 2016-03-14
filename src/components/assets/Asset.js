@@ -1,27 +1,25 @@
 import React from 'react'
-import scour from 'scourjs'
+import Thumbnail from './Thumbnail'
 
 export default function Asset ({asset}) {
   console.log(asset)
-  /*
-  const contentType = scour(asset.sys.contentType)
-  const fields = contentType.go('fields')
-  const fieldsWithoutDisplay = fields.filter((field) => {
-    return field.get('id') !== contentType.get('displayField')
-  })
-  const displayField = fields.find({id: contentType.get('displayField')}).value
-  const remainingFields = fieldsWithoutDisplay.map((field) => {
-    const id = field.get('id')
-    return <Field key={id} definition={field.value} content={asset.fields[id]}/>
-  })
-  return (
-    <div>
-      <Field key={displayField.id} definition={displayField} content={asset.fields[displayField.id]}/>
-      {remainingFields}
-    </div>
-  )
-  */
   return <div>
-    {asset.sys.id}
+    <Thumbnail url={asset.fields.file.url} fileName={asset.fields.file.fileName} size='320' />
+    <div>
+      <h2>Title</h2>
+      <p>{asset.fields.title}</p>
+      <h2>Description</h2>
+      <p>{asset.fields.description}</p>
+      <h2>Creation Date</h2>
+      <p>{asset.sys.createdAt}</p>
+      <h2>File Name</h2>
+      <p>{asset.fields.file.fileName}</p>
+      <h2>URL</h2>
+      <p>http:{asset.fields.file.url}</p>
+      <h2>MIME Type</h2>
+      <p>{asset.fields.file.contentType}</p>
+      <h2>Size</h2>
+      <p>{asset.fields.file.details.size} Bytes</p>
+    </div>
   </div>
 }

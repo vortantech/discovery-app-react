@@ -1,8 +1,10 @@
 import React from 'react'
 import scour from 'scourjs'
+import CSSModules from 'react-css-modules'
+import styles from './Field.css'
 import Field from './Field'
 
-export default function Entry ({entry}) {
+function Entry ({entry}) {
   const contentType = scour(entry.sys.contentType)
   const fields = contentType.go('fields')
   const fieldsWithoutDisplay = fields.filter((field) => {
@@ -15,8 +17,10 @@ export default function Entry ({entry}) {
   })
   return (
     <div>
-      <Field key={displayField.id} definition={displayField} content={entry.fields[displayField.id]}/>
+      <Field key={displayField.id} definition={displayField} content={entry.fields[displayField.id]} styleName='field'/>
       {remainingFields}
     </div>
   )
 }
+
+export default CSSModules(Entry, styles)

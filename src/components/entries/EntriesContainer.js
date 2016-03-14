@@ -1,16 +1,12 @@
-import React, {createClass, PropTypes} from 'react'
+import React, {createClass} from 'react'
 import {Link} from 'react-router'
 import {getClient} from '../../services/contentfulClient'
 import {getContentTypes, findContentTypeInList} from '../../services/contentTypeStore'
-import TwoPanelList from '../TwoPanelList'
+import TwoPanelList, {Placeholder} from '../TwoPanelList'
 import EntryListItem from './EntryListItem'
 import Entry from './Entry'
 
 export default createClass({
-  contextTypes: {
-    router: PropTypes.object.isRequired
-  },
-
   getInitialState () {
     return {
       entries: {},
@@ -42,19 +38,21 @@ export default createClass({
     if (this.state.phase === 'loading') {
       return <p>Loading your Entries...</p>
     } else {
-      let entryElement
-      let backNavLink = <Link to='/entries/by-content-type'>Back</Link>
-      let listTitle = <h3>{this.state.entries.items[0].sys.contentType.name}</h3>
+      let contentElement
+      const backNavLink = <Link to='/entries/by-content-type'>&lt; Back</Link>
+      const listTitle = <h3>{this.state.entries.items[0].sys.contentType.name}</h3>
       if (this.props.params.entryId) {
         const entry = this.findEntry(this.props.params.entryId)
-        entryElement = <Entry entry={entry} />
+        contentElement = <Entry entry={entry} />
+      } else {
+        contentElement = <Placeholder content='Please select your Entry.' />
       }
       return <TwoPanelList
         items={this.state.entries.items}
         ListView={EntryListItem}
         NavView={backNavLink}
         TitleView={listTitle}
-        ContentView={entryElement}
+        ContentView={contentElement}
         />
     }
   }

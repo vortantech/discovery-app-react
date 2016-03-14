@@ -22,9 +22,14 @@ function App (props) {
   return (
     <div styleName='app-container'>
       <nav>
-        {nav()}
+        <div styleName='nav-container'>
+          <img src='./contentful.svg' width='157' height='32'/>
+          {nav()}
+        </div>
       </nav>
-      {props.children}
+      <div styleName='content-container'>
+        {props.children}
+      </div>
     </div>
   )
 }

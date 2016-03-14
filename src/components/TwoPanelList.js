@@ -8,7 +8,7 @@ function TwoPanelList ({items, ListView, NavView, TitleView, ContentView}) {
   return (
     <div styleName='list-container'>
       <div styleName='list'>
-        {NavView}
+        <div styleName='list-nav-view'>{NavView}</div>
         {TitleView}
         <ul>{list}</ul>
       </div>
@@ -26,3 +26,10 @@ TwoPanelList.propTypes = {
 }
 
 export default CSSModules(TwoPanelList, styles)
+
+export const Placeholder = CSSModules(({content}) => {
+  return <div styleName='placeholder'>
+    <img src='contentful_logo_120x90@2x.png' />
+    <p>{content}</p>
+  </div>
+}, styles)

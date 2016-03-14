@@ -19,7 +19,7 @@
     "webpack": "^1.12.14"
   },
   "dependencies": {
-    "contentful": "^3.0.7",
+    "contentful": "^3.0.8",
     "localforage": "^1.4.0",
     "react": "^15.0.0-rc.1",
     "react-css-modules": "^3.7.5",

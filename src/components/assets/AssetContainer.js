@@ -1,20 +1,19 @@
 import React, {createClass} from 'react'
 import {getClient} from '../../services/contentfulClient'
-import Assets from './Assets'
+import Asset from './Asset'
 
 export default createClass({
   getInitialState () {
     return {
-      assets: {},
       phase: 'loading'
     }
   },
 
   componentDidMount () {
-    getClient().getAssets()
-    .then((assets) => {
+    getClient().getAsset(this.props.params.assetId)
+    .then((asset) => {
       this.setState({
-        assets: assets.toPlainObject(),
+        asset: asset.toPlainObject(),
         phase: 'loaded'
       })
     })
@@ -22,9 +21,9 @@ export default createClass({
 
   render () {
     if (this.state.phase === 'loading') {
-      return <p>Loading your Assets...</p>
+      return <p>Loading your Asset...</p>
     } else {
-      return <Assets items={this.state.assets.items}/>
+      return <Asset asset={this.state.asset}/>
     }
   }
 })

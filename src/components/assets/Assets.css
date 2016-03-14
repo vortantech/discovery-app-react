@@ -1,0 +1,10 @@
+.asset-list {
+  composes: asset-list from '../entries/Field.css';
+}
+
+.asset-item {
+  composes: image-link from '../entries/Field.css';
+  composes: asset-item from '../entries/Field.css';
+  width: 100px;
+  height: 140px;
+}

@@ -1,14 +1,10 @@
-import React, {createClass, PropTypes} from 'react'
+import React, {createClass} from 'react'
 import {getClient} from '../../services/contentfulClient'
 import {storeContentTypes} from '../../services/contentTypeStore'
-import TwoPanelList from '../TwoPanelList'
+import TwoPanelList, {Placeholder} from '../TwoPanelList'
 import ContentTypeListItem from './ContentTypeListItem'
 
 export default createClass({
-  contextTypes: {
-    router: PropTypes.object.isRequired
-  },
-
   getInitialState () {
     return {
       contentTypes: {},
@@ -31,11 +27,13 @@ export default createClass({
     if (this.state.phase === 'loading') {
       return <p>Loading your Content Types...</p>
     } else {
-      let listTitle = <h3>Content Types</h3>
+      const listTitle = <h3>Content Types</h3>
+      const placeholder = <Placeholder content='Please select your Content Type.' />
       return <TwoPanelList
         items={this.state.contentTypes.items}
         ListView={ContentTypeListItem}
         TitleView={listTitle}
+        ContentView={placeholder}
         />
     }
   }

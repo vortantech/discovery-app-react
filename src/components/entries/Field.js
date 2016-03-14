@@ -1,10 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router'
+import CSSModules from 'react-css-modules'
+import styles from './Field.css'
 import Thumbnail from '../assets/Thumbnail'
+import EntryLinkContainer from './EntryLinkContainer'
 
-export default function Field ({definition, content}) {
+function Field ({definition, content}) {
   return (
-    <div>
+    <div styleName='field'>
       <h3>{definition.name}</h3>
       {renderContent(content, definition)}
     </div>
@@ -17,7 +20,7 @@ export default function Field ({definition, content}) {
  */
 function renderContent (content, definition) {
   const {type, linkType} = definition
-  if (!content) {
+  if (typeof content === 'undefined' || content === null) {
     return <p>No content</p>
   } else if (type === 'Link' && linkType === 'Entry') {
     return renderEntryLink(content)
@@ -37,37 +40,34 @@ function renderContent (content, definition) {
 }
 
 function renderEntryLink (content) {
-  return 'show linked entries here when the bug is fixed'
-  // return <Link to={`/entries/by-content-type/${content.sys.contentType.sys.id}/${content.sys.id}`}>Linked entry</Link>
+  return <EntryLinkContainer entryLink={content} />
 }
 
 function renderAssetLink (content) {
-  return <Link to={`/assets/${content.sys.id}`}>
+  return <Link styleName='image-link' to={`/assets/${content.sys.id}`}>
     <Thumbnail url={content.fields.file.url} fileName={content.fields.file.fileName} />
   </Link>
 }
 
 function renderList (list, definition) {
-  console.log(definition)
+  const listStyle = determineListStyle(definition)
   const items = list.map((item, idx) => {
-    return <div key={idx}>
+    return <div styleName={`${listStyle}-item`} key={idx}>
       {renderContent(item, definition)}
     </div>
   })
-  // TODO add style for type of list
-  //const listStyle = determineListStyle(definition)
-  return <div>{items}</div>
+  return <div styleName={`${listStyle}-list`}>{items}</div>
 }
 
 function determineListStyle (definition) {
   if (definition.type === 'Link') {
     if (definition.linkType === 'Entry') {
-      return 'entries-list'
+      return 'entries'
     } else if (definition.linkType === 'Asset') {
-      return 'asset-list'
+      return 'asset'
     }
   } else if (definition.type === 'Symbol') {
-    return 'symbol-list'
+    return 'symbol'
   }
 }
 
@@ -91,3 +91,5 @@ function renderBoolean (content) {
 function isLocation (obj) {
   return obj && obj.lat && obj.lon
 }
+
+export default CSSModules(Field, styles)

@@ -10,7 +10,7 @@ import ContentTypesContainer from './components/content-types/ContentTypesContai
 import EntriesContainer from './components/entries/EntriesContainer'
 import Entry from './components/entries/Entry'
 import AssetsContainer from './components/assets/AssetsContainer'
-import Asset from './components/assets/Asset'
+import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
 
 render((
@@ -23,7 +23,7 @@ render((
       </Route>
       <Redirect from='entries' to='entries/by-content-type'/>
       <Route path='assets' component={AssetsContainer} onEnter={requireCredentials}/>
-      <Route path='assets/:assetId' component={Asset} onEnter={requireCredentials}/>
+      <Route path='assets/:assetId' component={AssetContainer} onEnter={requireCredentials}/>
       <Route path='error' component={Error}/>
     </Route>
   </Router>
