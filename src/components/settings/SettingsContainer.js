@@ -15,13 +15,17 @@ export default createClass({
     }
   },
 
-  loadSpace () {
+  loadSpace ({space, accessToken}) {
     resetClient()
     localforage.setItem('credentials', {
-      space: this.state.space,
-      accessToken: this.state.accessToken
+      space: space || this.state.space,
+      accessToken: accessToken || this.state.accessToken
     })
     .then(() => this.context.router.replace('/entries'))
+  },
+
+  loadDemoSpace () {
+    this.loadSpace({space: 'cfexampleapi', accessToken: 'b4c0n73n7fu1'})
   },
 
   handleChange (event) {
@@ -36,6 +40,7 @@ export default createClass({
       accessToken={this.state.accessToken}
       handleChange={this.handleChange}
       loadSpace={this.loadSpace}
+      loadDemoSpace={this.loadDemoSpace}
       />
   }
 })

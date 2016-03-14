@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react'
-import {Link} from 'react-router'
 import CSSModules from 'react-css-modules'
 import styles from './Settings.css'
 
-function SettingsForm ({space, accessToken, handleChange, loadSpace}) {
+function SettingsForm ({space, accessToken, handleChange, loadSpace, loadDemoSpace}) {
   return (
     <form onSubmit={loadSpace} styleName='settings-form'>
       <p><a href='https://contentful.com'>Contentful</a> is a content management platform for web applications, mobile apps and connected devices.</p>
@@ -14,7 +13,7 @@ function SettingsForm ({space, accessToken, handleChange, loadSpace}) {
       <input id='accessToken' type='text' value={accessToken} onChange={handleChange}/>
       <button onClick={loadSpace}>Load Space</button>
       <p>Still don't have a Space?</p>
-      <p><Link to='/demo'>Load a demo Space</Link></p>
+      <p><a href='#' onClick={loadDemoSpace}>Load a demo Space</a></p>
       <p><a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
     </form>
   )
