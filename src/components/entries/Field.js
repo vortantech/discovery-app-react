@@ -23,10 +23,14 @@ function renderContent (content, definition) {
   const {type, linkType} = definition
   if (typeof content === 'undefined' || content === null) {
     return <p>No content</p>
-  } else if (type === 'Link' && linkType === 'Entry') {
+  } else if (type === 'Link' && linkType === 'Entry' && content.sys.type === 'Entry') {
     return renderEntryLink(content)
-  } else if (type === 'Link' && linkType === 'Asset') {
+  } else if (type === 'Link' && linkType === 'Asset' && content.sys.type === 'Asset') {
     return renderAssetLink(content)
+  } else if (type === 'Link' && linkType === 'Entry' && content.sys.type === 'Link') {
+    return <p>Link to {content.sys.id} is missing.</p>
+  } else if (type === 'Link' && linkType === 'Asset' && content.sys.type === 'Link') {
+    return <a href='#' title={`Link to ${content.sys.id} is missing.`}>Missing</a>
   } else if (type === 'Array' && Array.isArray(content)) {
     return renderList(content, definition.items)
   } else if (type === 'Location' && isLocation(content)) {
