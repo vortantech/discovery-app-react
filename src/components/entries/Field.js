@@ -9,7 +9,7 @@ import marked from 'marked'
 function Field ({definition, content}) {
   return (
     <div styleName='field'>
-      <h3>{definition.name}</h3>
+      <h2>{definition.name}</h2>
       {renderContent(content, definition)}
     </div>
   )

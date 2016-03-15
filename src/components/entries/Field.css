@@ -1,5 +1,17 @@
 .field {
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+}
+
+
+.field ul {
+  padding-left: 25px;
+}
+
+.field > h2,
+.field p,
+.field blockquote,
+.field ul {
+  margin-bottom: 10px;
 }
 
 .image-link {
