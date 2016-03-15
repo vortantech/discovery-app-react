@@ -1,6 +1,7 @@
 import React from 'react'
 import CSSModules from 'react-css-modules'
 import prettyBytes from 'pretty-bytes'
+import formatDate from '../format-date'
 import styles from './Asset.css'
 import Thumbnail from './Thumbnail'
 
@@ -27,10 +28,6 @@ function Asset ({asset}) {
       <p>{prettyBytes(asset.fields.file.details.size)}</p>
     </div>
   </div>
-}
-
-function formatDate (date) {
-  return (new Date(date)).toUTCString()
 }
 
 export default CSSModules(Asset, styles)

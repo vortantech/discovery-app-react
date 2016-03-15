@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 import CSSModules from 'react-css-modules'
 import styles from './Field.css'
+import formatDate from '../format-date'
 import Thumbnail from '../assets/Thumbnail'
 import EntryLinkContainer from './EntryLinkContainer'
 import marked from 'marked'
@@ -35,6 +36,8 @@ function renderContent (content, definition) {
     return renderList(content, definition.items)
   } else if (type === 'Location' && isLocation(content)) {
     return renderLocation(content)
+  } else if (type === 'Date') {
+    return <p>{formatDate(content)}</p>
   } else if (type === 'Object') {
     return renderObject(content)
   } else if (type === 'Boolean') {
