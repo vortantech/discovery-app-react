@@ -4,6 +4,7 @@ import CSSModules from 'react-css-modules'
 import styles from './Field.css'
 import Thumbnail from '../assets/Thumbnail'
 import EntryLinkContainer from './EntryLinkContainer'
+import marked from 'marked'
 
 function Field ({definition, content}) {
   return (
@@ -34,8 +35,16 @@ function renderContent (content, definition) {
     return renderObject(content)
   } else if (type === 'Boolean') {
     return renderBoolean(content)
+  } else if (type === 'Text') {
+    return <p dangerouslySetInnerHTML={renderMarkdown(content)}/>
   } else {
     return <p>{content}</p>
+  }
+}
+
+function renderMarkdown (content) {
+  return {
+    __html: marked(content, {sanitize: true})
   }
 }
 
