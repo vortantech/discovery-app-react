@@ -1,10 +1,20 @@
 .asset-list {
-  composes: asset-list from '../entries/Field.css';
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .asset-item {
-  composes: image-link from '../entries/Field.css';
-  composes: asset-item from '../entries/Field.css';
-  width: 100px;
-  height: 140px;
+  width: 150px;
+  margin-right: 15px;
+  margin-bottom: 35px;
+  text-align: center;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.asset-label {
+  margin-top: 15px;
 }

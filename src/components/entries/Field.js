@@ -30,7 +30,7 @@ function renderContent (content, definition) {
   } else if (type === 'Link' && linkType === 'Entry' && content.sys.type === 'Link') {
     return <p>Link to {content.sys.id} is missing.</p>
   } else if (type === 'Link' && linkType === 'Asset' && content.sys.type === 'Link') {
-    return <a href='#' title={`Link to ${content.sys.id} is missing.`}>Missing</a>
+    return <Thumbnail url='missing' fileName='Missing' description={`Link to ${content.sys.id} is missing.`}/>
   } else if (type === 'Array' && Array.isArray(content)) {
     return renderList(content, definition.items)
   } else if (type === 'Location' && isLocation(content)) {

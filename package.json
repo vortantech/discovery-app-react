@@ -26,6 +26,7 @@
     "contentful": "^3.0.8",
     "localforage": "^1.4.0",
     "marked": "^0.3.5",
+    "pretty-bytes": "^3.0.1",
     "react": "^15.0.0-rc.1",
     "react-css-modules": "^3.7.5",
     "react-dom": "^15.0.0-rc.1",
