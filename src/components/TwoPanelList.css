@@ -1,15 +1,22 @@
-.list-container {
+.two-panel-list {
   display: flex;
 }
 
 .list {
   width: 200px;
+  margin-right: 50px;
+}
+
+.list-container {
+  margin-top: 10px;
+  height: 450px;
+  overflow: auto;
 }
 
 .list ul {
   padding: 0;
   margin: 0;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .list li {
@@ -33,7 +40,7 @@
 }
 
 .list-item-contents {
-  width: 800px;
+  width: 750px;
   min-height: 300px;
   position: relative;
 }
