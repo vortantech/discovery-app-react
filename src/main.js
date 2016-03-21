@@ -14,6 +14,8 @@ import AssetsContainer from './components/assets/AssetsContainer'
 import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
 
+localforage.setDriver(localforage.LOCALSTORAGE)
+
 let history = useBasename(useRouterHistory(createHistory))({
   basename: process.env.NODE_ENV === 'production' ? '/discovery-app-react' : ''
 })
