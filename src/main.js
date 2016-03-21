@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Redirect, hashHistory as history } from 'react-router'
+import { Router, Route, IndexRoute, Redirect, useRouterHistory } from 'react-router'
+import { createHistory, useBasename } from 'history'
 import localforage from 'localforage'
 import { initClient, getClient } from './services/contentfulClient'
 
@@ -12,6 +13,10 @@ import Entry from './components/entries/Entry'
 import AssetsContainer from './components/assets/AssetsContainer'
 import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
+
+let history = useBasename(useRouterHistory(createHistory))({
+  basename: process.env.NODE_ENV === 'production' ? '/discovery-app-react' : ''
+})
 
 render((
   <Router history={history}>

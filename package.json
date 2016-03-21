@@ -6,8 +6,8 @@
   "private": "true",
   "scripts": {
     "start": "webpack-dev-server --host=0.0.0.0 --port=9020 --inline --hot",
-    "build": "webpack -p",
     "clean": "rimraf dist && rimraf gh-pages",
+    "build": "npm run clean && NODE_ENV=production webpack",
     "publish": "npm run build && ./bin/publish.sh"
   },
   "author": "",
