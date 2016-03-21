@@ -48360,15 +48360,14 @@
 /* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var topLevelPath = process.env === 'production' ? '/discovery-app-react' : '';
+	var topLevelPath =  true ? '/discovery-app-react' : '';
 	
 	exports.default = topLevelPath;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(229)))
 
 /***/ },
 /* 768 */
