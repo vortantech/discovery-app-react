@@ -21,7 +21,12 @@ export default createClass({
       space: space || this.state.space,
       accessToken: accessToken || this.state.accessToken
     })
-    .then(() => this.context.router.replace('/entries'))
+    .then(
+      () => this.context.router.push('/entries/by-content-type'),
+      (err) => {
+        throw err
+      }
+    )
   },
 
   loadDemoSpace () {
