@@ -11,9 +11,9 @@ if [ ! -d $PAGES_DIR ] ; then
   git clone --single-branch --branch gh-pages $REPO $PAGES_DIR
 fi
 
-cp *.svg *.png *.css dist/*.js $PAGES_DIR
+cp index.html *.svg *.png *.css dist/*.js $PAGES_DIR
 
-sed -e "s/<base href='\/'/<base href='\/discovery-app-react\/'/g" index.html > $PAGES_DIR/index.html
+#sed -e "s/<base href='\/'/<base href='\/discovery-app-react\/'/g" index.html > $PAGES_DIR/index.html
 cp $PAGES_DIR/index.html $PAGES_DIR/404.html
 
 pushd $PAGES_DIR
