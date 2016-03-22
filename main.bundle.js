@@ -107,7 +107,7 @@
 	  { history: history },
 	  _react2.default.createElement(
 	    _reactRouter.Route,
-	    { path: 'discovery-app-react', component: _App2.default },
+	    { path: '/', component: _App2.default },
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _SettingsContainer2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'entries/by-content-type', component: _ContentTypesContainer2.default, onEnter: requireCredentials }),
 	    _react2.default.createElement(
