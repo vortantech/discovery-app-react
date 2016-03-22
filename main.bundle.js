@@ -98,13 +98,16 @@
 	
 	_localforage2.default.setDriver(_localforage2.default.LOCALSTORAGE);
 	
-	var history = (0, _reactRouter.useRouterHistory)(_history.createHistory)();
+	var history = (0, _history.useBasename)((0, _reactRouter.useRouterHistory)(_history.createHistory))({
+	  basename:  true ? '/discovery-app-react' : ''
+	});
+	
 	(0, _reactDom.render)(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: history },
 	  _react2.default.createElement(
 	    _reactRouter.Route,
-	    { path: '/', component: _App2.default },
+	    { path: 'discovery-app-react/', component: _App2.default },
 	    _react2.default.createElement(_reactRouter.IndexRoute, { component: _SettingsContainer2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'entries/by-content-type', component: _ContentTypesContainer2.default, onEnter: requireCredentials }),
 	    _react2.default.createElement(
