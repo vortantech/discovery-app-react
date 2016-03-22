@@ -98,10 +98,7 @@
 	
 	_localforage2.default.setDriver(_localforage2.default.LOCALSTORAGE);
 	
-	var history = (0, _history.useBasename)((0, _reactRouter.useRouterHistory)(_history.createHistory))({
-	  basename:  true ? '/discovery-app-react' : ''
-	});
-	
+	var history = (0, _reactRouter.useRouterHistory)(_history.createHistory)();
 	(0, _reactDom.render)(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: history },
