@@ -101,9 +101,7 @@
 	// TODO prepare a PR with documentation for useRouterHistory
 	
 	// TODO perhaps there's a way to simplify this by using browserHistory directly?
-	var history = (0, _reactRouter.useRouterHistory)(_history.createHistory)({
-	  basename:  true ? '/discovery-app-react' : ''
-	});
+	var history = (0, _reactRouter.useRouterHistory)(_history.createHistory)();
 	
 	/*
 	history.listenBeforeUnload(function () {
