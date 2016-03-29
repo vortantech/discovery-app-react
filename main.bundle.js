@@ -76,7 +76,7 @@
 	
 	var _EntriesContainer2 = _interopRequireDefault(_EntriesContainer);
 	
-	var _Entry = __webpack_require__(844);
+	var _Entry = __webpack_require__(875);
 	
 	var _Entry2 = _interopRequireDefault(_Entry);
 	
@@ -51302,9 +51302,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _scourjs = __webpack_require__(842);
+	
+	var _scourjs2 = _interopRequireDefault(_scourjs);
+	
 	var _reactRouter = __webpack_require__(167);
 	
-	var _uniqueConcat = __webpack_require__(842);
+	var _uniqueConcat = __webpack_require__(873);
 	
 	var _uniqueConcat2 = _interopRequireDefault(_uniqueConcat);
 	
@@ -51316,11 +51320,11 @@
 	
 	var _TwoPanelList2 = _interopRequireDefault(_TwoPanelList);
 	
-	var _EntryListItem = __webpack_require__(843);
+	var _EntryListItem = __webpack_require__(874);
 	
 	var _EntryListItem2 = _interopRequireDefault(_EntryListItem);
 	
-	var _Entry = __webpack_require__(844);
+	var _Entry = __webpack_require__(875);
 	
 	var _Entry2 = _interopRequireDefault(_Entry);
 	
@@ -51333,7 +51337,7 @@
 	exports.default = (0, _react.createClass)({
 	  getInitialState: function getInitialState() {
 	    return {
-	      entries: [],
+	      entries: (0, _scourjs2.default)([]),
 	      skip: 0,
 	      total: undefined,
 	      phase: 'loading'
@@ -51343,9 +51347,7 @@
 	    this.loadEntries();
 	  },
 	  findEntry: function findEntry(id) {
-	    return this.state.entries.find(function (item) {
-	      return item.sys.id === id;
-	    });
+	    return this.state.entries.find({ 'sys.id': { '$eq': id } });
 	  },
 	  loadEntries: function loadEntries() {
 	    var _this = this;
@@ -51361,12 +51363,11 @@
 	      var entriesResponse = _ref2[0];
 	      var contentTypes = _ref2[1];
 	
-	      entriesResponse = entriesResponse.toPlainObject();
-	      entriesResponse.items = addContentTypesToEntries(entriesResponse.items, contentTypes);
+	      entriesResponse = (0, _scourjs2.default)(entriesResponse).set('items', (0, _uniqueConcat2.default)(_this.state.entries.value, addContentTypesToEntries(entriesResponse.items, contentTypes), function (entry) {
+	        return entry.sys.id;
+	      }));
 	      _this.setState({
-	        entries: (0, _uniqueConcat2.default)(_this.state.entries, entriesResponse.items, function (entry) {
-	          return entry.sys.id;
-	        }),
+	        entries: entriesResponse.go('items'),
 	        skip: _this.state.skip + entriesResponse.limit,
 	        total: entriesResponse.total,
 	        phase: 'loaded'
@@ -51391,21 +51392,21 @@
 	      var listTitle = _react2.default.createElement(
 	        'h3',
 	        null,
-	        this.state.entries[0].sys.contentType.name
+	        this.state.entries.getAt(0).sys.contentType.name
 	      );
 	      if (this.props.params.entryId) {
-	        var entry = this.findEntry(this.props.params.entryId);
+	        var entry = this.findEntry(this.props.params.entryId).value;
 	        contentElement = _react2.default.createElement(_Entry2.default, { entry: entry });
 	      } else {
 	        contentElement = _react2.default.createElement(_TwoPanelList.Placeholder, { content: 'Please select your Entry.' });
 	      }
 	
-	      if (this.state.entries.length < this.state.total) {
+	      if (this.state.entries.len() < this.state.total) {
 	        loadMoreElement = _react2.default.createElement(_FeaturelessButton2.default, { label: 'Load more', action: this.loadEntries });
 	      }
 	
 	      return _react2.default.createElement(_TwoPanelList2.default, {
-	        items: this.state.entries,
+	        items: this.state.entries.value,
 	        ListView: _EntryListItem2.default,
 	        NavView: backNavLink,
 	        TitleView: listTitle,
@@ -51427,134 +51428,6 @@
 
 /***/ },
 /* 842 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Concatenates two arrays, removing duplicates in the process and returns one array with unique values.
-	 * In case the elements in the array don't have a proper built in way to determine their identity,
-	 * a custom identity function must be provided.
-	 *
-	 * As an example, {Object}s all return '[ 'object' ]' when .toString()ed and therefore require a custom
-	 * identity function.
-	 *
-	 * @name exports
-	 * @function unique-concat
-	 * @param arr1 {Array} first batch of elements
-	 * @param arr2 {Array} second batch of elements
-	 * @param identity {Function} (optional) supply an alternative way to get an element's identity
-	 */
-	var go = module.exports = function uniqueConcat(arr1, arr2, identity) {
-	
-	  if (!arr1 || !arr2) throw new Error('Need two arrays to merge');
-	  if (!Array.isArray(arr1)) throw new Error('First argument is not an array, but a ' + typeof arr1);
-	  if (!Array.isArray(arr2)) throw new Error('Second argument is not an array, but a ' + typeof arr2);
-	  if (identity && typeof identity !== 'function') throw new Error('Third argument should be a function');
-	
-	  function hashify(acc, k) {
-	    acc[identity ? identity(k) : k] = k;
-	    return acc;
-	  }
-	
-	  var arr1Hash = arr1.reduce(hashify, {});
-	  var mergedHash = arr2.reduce(hashify, arr1Hash);
-	
-	  return Object.keys(mergedHash).map(function (key) { return mergedHash[key]; });
-	};
-
-
-/***/ },
-/* 843 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = EntryListItem;
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(167);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function EntryListItem(_ref) {
-	  var item = _ref.item;
-	
-	  var contentType = item.sys.contentType;
-	  return _react2.default.createElement(
-	    'li',
-	    null,
-	    _react2.default.createElement(
-	      _reactRouter.Link,
-	      { to: '/entries/by-content-type/' + item.sys.contentType.sys.id + '/' + item.sys.id },
-	      item.fields[contentType.displayField]
-	    )
-	  );
-	}
-
-/***/ },
-/* 844 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _scourjs = __webpack_require__(845);
-	
-	var _scourjs2 = _interopRequireDefault(_scourjs);
-	
-	var _reactCssModules = __webpack_require__(761);
-	
-	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
-	
-	var _Field = __webpack_require__(876);
-	
-	var _Field2 = _interopRequireDefault(_Field);
-	
-	var _Field3 = __webpack_require__(878);
-	
-	var _Field4 = _interopRequireDefault(_Field3);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function Entry(_ref) {
-	  var entry = _ref.entry;
-	
-	  var contentType = (0, _scourjs2.default)(entry.sys.contentType);
-	  var fields = contentType.go('fields');
-	  var fieldsWithoutDisplay = fields.filter(function (field) {
-	    return field.get('id') !== contentType.get('displayField');
-	  });
-	  var displayField = fields.find({ id: contentType.get('displayField') }).value;
-	  var remainingFields = fieldsWithoutDisplay.map(function (field) {
-	    var id = field.get('id');
-	    return _react2.default.createElement(_Field4.default, { key: id, definition: field.value, content: entry.fields[id] });
-	  });
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(_Field4.default, { key: displayField.id, definition: displayField, content: entry.fields[displayField.id], styleName: 'field' }),
-	    remainingFields
-	  );
-	}
-	
-	exports.default = (0, _reactCssModules2.default)(Entry, _Field2.default);
-
-/***/ },
-/* 845 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint-disable new-cap */
@@ -51564,14 +51437,14 @@
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
-	var Search = __webpack_require__(846);
-	var assign = __webpack_require__(851);
-	var buildExtensions = __webpack_require__(857);
-	var normalizeKeypath = __webpack_require__(860);
-	var utils = __webpack_require__(861);
-	var negate = __webpack_require__(875);
-	var sortValues = __webpack_require__(874);
-	var toFunction = __webpack_require__(872);
+	var Search = __webpack_require__(843);
+	var assign = __webpack_require__(848);
+	var buildExtensions = __webpack_require__(854);
+	var normalizeKeypath = __webpack_require__(857);
+	var utils = __webpack_require__(858);
+	var negate = __webpack_require__(872);
+	var sortValues = __webpack_require__(871);
+	var toFunction = __webpack_require__(869);
 	
 	/**
 	 * scour : scour(object)
@@ -52569,23 +52442,23 @@
 	module.exports = scour;
 
 /***/ },
-/* 846 */
+/* 843 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var normalizeKeypath = __webpack_require__(847);
-	var cloneWithoutKeys = __webpack_require__(848);
-	var toAST = __webpack_require__(849);
-	var assign = __webpack_require__(851);
-	var each = __webpack_require__(852);
-	var stringify = __webpack_require__(855);
+	var normalizeKeypath = __webpack_require__(844);
+	var cloneWithoutKeys = __webpack_require__(845);
+	var toAST = __webpack_require__(846);
+	var assign = __webpack_require__(848);
+	var each = __webpack_require__(849);
+	var stringify = __webpack_require__(852);
 	
-	var operands = __webpack_require__(850);
-	var indexers = __webpack_require__(856);
-	var fallbacks = __webpack_require__(853);
+	var operands = __webpack_require__(847);
+	var indexers = __webpack_require__(853);
+	var fallbacks = __webpack_require__(850);
 	
 	/**
 	 * Searcher : Searcher(data)
@@ -52891,7 +52764,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 847 */
+/* 844 */
 /***/ function(module, exports) {
 
 	/**
@@ -52920,7 +52793,7 @@
 
 
 /***/ },
-/* 848 */
+/* 845 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -52940,15 +52813,15 @@
 	};
 
 /***/ },
-/* 849 */
+/* 846 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var operands = __webpack_require__(850);
-	var fallbacks = __webpack_require__(853);
+	var operands = __webpack_require__(847);
+	var fallbacks = __webpack_require__(850);
 	
 	/*
 	 * Converts a MongoDB-style query to an AST (abstract syntax tree) that's
@@ -52994,16 +52867,16 @@
 	};
 
 /***/ },
-/* 850 */
+/* 847 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var cloneWithoutKeys = __webpack_require__(848);
-	var assign = __webpack_require__(851);
-	var each = __webpack_require__(852);
+	var cloneWithoutKeys = __webpack_require__(845);
+	var assign = __webpack_require__(848);
+	var each = __webpack_require__(849);
 	
 	/**
 	 * Internal: operands.
@@ -53135,7 +53008,7 @@
 	}
 
 /***/ },
-/* 851 */
+/* 848 */
 /***/ function(module, exports) {
 
 	/* eslint-disable no-unused-vars */
@@ -53180,7 +53053,7 @@
 
 
 /***/ },
-/* 852 */
+/* 849 */
 /***/ function(module, exports) {
 
 	/**
@@ -53215,13 +53088,13 @@
 
 
 /***/ },
-/* 853 */
+/* 850 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var normalizeKeypath = __webpack_require__(847);
-	var get = __webpack_require__(854);
+	var normalizeKeypath = __webpack_require__(844);
+	var get = __webpack_require__(851);
 	
 	var fallbacks = {};
 	
@@ -53366,7 +53239,7 @@
 	module.exports = fallbacks;
 
 /***/ },
-/* 854 */
+/* 851 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -53384,7 +53257,7 @@
 
 
 /***/ },
-/* 855 */
+/* 852 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -53404,13 +53277,13 @@
 	module.exports = JSON.stringify;
 
 /***/ },
-/* 856 */
+/* 853 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var stringify = __webpack_require__(855);
-	var get = __webpack_require__(854);
+	var stringify = __webpack_require__(852);
+	var get = __webpack_require__(851);
 	var indexers = {};
 	
 	indexers['$eq'] = function (item, key, field, index) {
@@ -53422,12 +53295,12 @@
 	module.exports = indexers;
 
 /***/ },
-/* 857 */
+/* 854 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var map = __webpack_require__(858);
+	var map = __webpack_require__(855);
 	
 	/**
 	 * Internal: builds extensions based on parameters passed onto `.use()`.
@@ -53447,10 +53320,10 @@
 	};
 
 /***/ },
-/* 858 */
+/* 855 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(859)
+	var forEach = __webpack_require__(856)
 	
 	module.exports = function map (each, fn) {
 	  if (typeof each !== 'function') each = forEach.bind(this, each)
@@ -53461,7 +53334,7 @@
 
 
 /***/ },
-/* 859 */
+/* 856 */
 /***/ function(module, exports) {
 
 	/**
@@ -53496,7 +53369,7 @@
 
 
 /***/ },
-/* 860 */
+/* 857 */
 /***/ function(module, exports) {
 
 	/**
@@ -53522,7 +53395,7 @@
 
 
 /***/ },
-/* 861 */
+/* 858 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -53543,7 +53416,7 @@
 	 * This is also available as `require('scourjs/utilities/get')`.
 	 */
 	
-	exports.get = __webpack_require__(862)
+	exports.get = __webpack_require__(859)
 	
 	/**
 	 * scour.set : scour.set(object, keypath, value)
@@ -53557,7 +53430,7 @@
 	 * This is also available as `require('scourjs/utilities/set')`.
 	 */
 	
-	exports.set = __webpack_require__(863)
+	exports.set = __webpack_require__(860)
 	
 	/**
 	 * scour.del : scour.del(object, keypath)
@@ -53571,7 +53444,7 @@
 	 * This is also available as `require('scourjs/utilities/del')`.
 	 */
 	
-	exports.del = __webpack_require__(865)
+	exports.del = __webpack_require__(862)
 	
 	/**
 	 * scour.extendIn : scour.extendIn(object, keypath, extensions...)
@@ -53585,7 +53458,7 @@
 	 * This is also available as `require('scourjs/utilities/extend_in')`.
 	 */
 	
-	exports.extendIn = __webpack_require__(867)
+	exports.extendIn = __webpack_require__(864)
 	
 	/**
 	 * scour.each : scour.each(iterable, fn)
@@ -53599,7 +53472,7 @@
 	 * [Array#forEach]: http://devdocs.io/javascript/global_objects/array/foreach
 	 */
 	
-	exports.each = __webpack_require__(859)
+	exports.each = __webpack_require__(856)
 	
 	/**
 	 * scour.map : scour.map(iterable, fn)
@@ -53615,7 +53488,7 @@
 	 * [Array#map]: http://devdocs.io/javascript/global_objects/array/map
 	 */
 	
-	exports.map = __webpack_require__(858)
+	exports.map = __webpack_require__(855)
 	
 	/**
 	 * scour.mapObject : scour.mapObject(iterable, fn)
@@ -53636,7 +53509,7 @@
 	 * This is also available as `require('scourjs/utilities/map_object')`.
 	 */
 	
-	exports.mapObject = __webpack_require__(868)
+	exports.mapObject = __webpack_require__(865)
 	
 	/**
 	 * scour.indexedMap : scour.indexedMap(iterable, fn)
@@ -53665,7 +53538,7 @@
 	 * This is also available as `require('scourjs/utilities/indexed_map')`.
 	 */
 	
-	exports.indexedMap = __webpack_require__(869)
+	exports.indexedMap = __webpack_require__(866)
 	
 	/**
 	 * scour.filter : scour.filter(iterable, function(val, key), [isArray])
@@ -53683,7 +53556,7 @@
 	 * [Array#filter]: http://devdocs.io/javascript/global_objects/array/filter
 	 */
 	
-	exports.filter = __webpack_require__(870)
+	exports.filter = __webpack_require__(867)
 	
 	/**
 	 * scour.sortBy : scour.sortBy(iterable, criteria)
@@ -53695,11 +53568,11 @@
 	 * This is also available as `require('scourjs/utilities/sort_by')`.
 	 */
 	
-	exports.sortBy = __webpack_require__(871)
+	exports.sortBy = __webpack_require__(868)
 
 
 /***/ },
-/* 862 */
+/* 859 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -53717,12 +53590,12 @@
 
 
 /***/ },
-/* 863 */
+/* 860 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
 	
-	var clone = __webpack_require__(864)
+	var clone = __webpack_require__(861)
 	
 	/**
 	 * Sets a `keypath` into an `object` immutably.
@@ -53762,11 +53635,11 @@
 
 
 /***/ },
-/* 864 */
+/* 861 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function clone (object) {
-	  var assign = __webpack_require__(851)
+	  var assign = __webpack_require__(848)
 	  return Array.isArray(object)
 	    ? [].slice.call(object)
 	    : assign({}, object)
@@ -53774,13 +53647,13 @@
 
 
 /***/ },
-/* 865 */
+/* 862 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
 	
-	var clone = __webpack_require__(864)
-	var cloneWithout = __webpack_require__(866)
+	var clone = __webpack_require__(861)
+	var cloneWithout = __webpack_require__(863)
 	
 	/**
 	 * Deletes a `keypath` from an `object` immutably.
@@ -53822,7 +53695,7 @@
 
 
 /***/ },
-/* 866 */
+/* 863 */
 /***/ function(module, exports) {
 
 	/**
@@ -53846,12 +53719,12 @@
 
 
 /***/ },
-/* 867 */
+/* 864 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var get = __webpack_require__(862)
-	var set = __webpack_require__(863)
-	var assign = __webpack_require__(851)
+	var get = __webpack_require__(859)
+	var set = __webpack_require__(860)
+	var assign = __webpack_require__(848)
 	
 	module.exports = function extendIn (source, keypath, extensions) {
 	  if (keypath.length === 0) return assign({}, source, extensions)
@@ -53867,10 +53740,10 @@
 
 
 /***/ },
-/* 868 */
+/* 865 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(859)
+	var forEach = __webpack_require__(856)
 	
 	module.exports = function mapObject (each, fn) {
 	  if (typeof each !== 'function') each = forEach.bind(this, each)
@@ -53881,10 +53754,10 @@
 
 
 /***/ },
-/* 869 */
+/* 866 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(859)
+	var forEach = __webpack_require__(856)
 	
 	module.exports = function indexedMap (each, fn) {
 	  /* istanbul ignore next */
@@ -53899,10 +53772,10 @@
 
 
 /***/ },
-/* 870 */
+/* 867 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(859)
+	var forEach = __webpack_require__(856)
 	
 	module.exports = function filter (each, fn, _isArray) {
 	  var isArray = typeof _isArray !== 'undefined' ? _isArray : Array.isArray(each)
@@ -53927,13 +53800,13 @@
 
 
 /***/ },
-/* 871 */
+/* 868 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var map = __webpack_require__(858)
-	var forEach = __webpack_require__(859)
-	var toFunction = __webpack_require__(872)
-	var sortValues = __webpack_require__(874)
+	var map = __webpack_require__(855)
+	var forEach = __webpack_require__(856)
+	var toFunction = __webpack_require__(869)
+	var sortValues = __webpack_require__(871)
 	
 	module.exports = function sortBy (each, condition, isArray) {
 	  if (typeof isArray === 'undefined' && !Array.isArray(each)) isArray = false
@@ -53950,7 +53823,7 @@
 
 
 /***/ },
-/* 872 */
+/* 869 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -53960,9 +53833,9 @@
 	
 	var expr;
 	try {
-	  expr = __webpack_require__(873);
+	  expr = __webpack_require__(870);
 	} catch(e) {
-	  expr = __webpack_require__(873);
+	  expr = __webpack_require__(870);
 	}
 	
 	/**
@@ -54108,7 +53981,7 @@
 
 
 /***/ },
-/* 873 */
+/* 870 */
 /***/ function(module, exports) {
 
 	/**
@@ -54199,11 +54072,11 @@
 
 
 /***/ },
-/* 874 */
+/* 871 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexedMap = __webpack_require__(869)
-	var map = __webpack_require__(858)
+	var indexedMap = __webpack_require__(866)
+	var map = __webpack_require__(855)
 	
 	/*
 	 * Internal: Sorts a `{ key, value, criteria, index }` tuple array by
@@ -54231,7 +54104,7 @@
 
 
 /***/ },
-/* 875 */
+/* 872 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -54245,6 +54118,134 @@
 	    return !fn.apply(this, arguments);
 	  };
 	};
+
+/***/ },
+/* 873 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/**
+	 * Concatenates two arrays, removing duplicates in the process and returns one array with unique values.
+	 * In case the elements in the array don't have a proper built in way to determine their identity,
+	 * a custom identity function must be provided.
+	 *
+	 * As an example, {Object}s all return '[ 'object' ]' when .toString()ed and therefore require a custom
+	 * identity function.
+	 *
+	 * @name exports
+	 * @function unique-concat
+	 * @param arr1 {Array} first batch of elements
+	 * @param arr2 {Array} second batch of elements
+	 * @param identity {Function} (optional) supply an alternative way to get an element's identity
+	 */
+	var go = module.exports = function uniqueConcat(arr1, arr2, identity) {
+	
+	  if (!arr1 || !arr2) throw new Error('Need two arrays to merge');
+	  if (!Array.isArray(arr1)) throw new Error('First argument is not an array, but a ' + typeof arr1);
+	  if (!Array.isArray(arr2)) throw new Error('Second argument is not an array, but a ' + typeof arr2);
+	  if (identity && typeof identity !== 'function') throw new Error('Third argument should be a function');
+	
+	  function hashify(acc, k) {
+	    acc[identity ? identity(k) : k] = k;
+	    return acc;
+	  }
+	
+	  var arr1Hash = arr1.reduce(hashify, {});
+	  var mergedHash = arr2.reduce(hashify, arr1Hash);
+	
+	  return Object.keys(mergedHash).map(function (key) { return mergedHash[key]; });
+	};
+
+
+/***/ },
+/* 874 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = EntryListItem;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(167);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function EntryListItem(_ref) {
+	  var item = _ref.item;
+	
+	  var contentType = item.sys.contentType;
+	  return _react2.default.createElement(
+	    'li',
+	    null,
+	    _react2.default.createElement(
+	      _reactRouter.Link,
+	      { to: '/entries/by-content-type/' + item.sys.contentType.sys.id + '/' + item.sys.id },
+	      item.fields[contentType.displayField]
+	    )
+	  );
+	}
+
+/***/ },
+/* 875 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _scourjs = __webpack_require__(842);
+	
+	var _scourjs2 = _interopRequireDefault(_scourjs);
+	
+	var _reactCssModules = __webpack_require__(761);
+	
+	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
+	
+	var _Field = __webpack_require__(876);
+	
+	var _Field2 = _interopRequireDefault(_Field);
+	
+	var _Field3 = __webpack_require__(878);
+	
+	var _Field4 = _interopRequireDefault(_Field3);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function Entry(_ref) {
+	  var entry = _ref.entry;
+	
+	  var contentType = (0, _scourjs2.default)(entry.sys.contentType);
+	  var fields = contentType.go('fields');
+	  var fieldsWithoutDisplay = fields.filter(function (field) {
+	    return field.get('id') !== contentType.get('displayField');
+	  });
+	  var displayField = fields.find({ id: contentType.get('displayField') }).value;
+	  var remainingFields = fieldsWithoutDisplay.map(function (field) {
+	    var id = field.get('id');
+	    return _react2.default.createElement(_Field4.default, { key: id, definition: field.value, content: entry.fields[id] });
+	  });
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(_Field4.default, { key: displayField.id, definition: displayField, content: entry.fields[displayField.id], styleName: 'field' }),
+	    remainingFields
+	  );
+	}
+	
+	exports.default = (0, _reactCssModules2.default)(Entry, _Field2.default);
 
 /***/ },
 /* 876 */
@@ -54360,6 +54361,7 @@
 	function renderContent(content, definition) {
 	  var type = definition.type;
 	  var linkType = definition.linkType;
+	  //debugger
 	
 	  if (typeof content === 'undefined' || content === null) {
 	    return _react2.default.createElement(
@@ -54397,6 +54399,19 @@
 	    return renderBoolean(content);
 	  } else if (type === 'Text') {
 	    return _react2.default.createElement('p', { dangerouslySetInnerHTML: renderMarkdown(content) });
+	  } else if (content.sys || content.fields) {
+	    return _react2.default.createElement(
+	      'div',
+	      null,
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'Error rendering field ',
+	        definition.id,
+	        ' with content:'
+	      ),
+	      renderObject(content)
+	    );
 	  } else {
 	    return _react2.default.createElement(
 	      'p',
@@ -54472,13 +54487,14 @@
 	}
 	
 	function renderObject(content) {
+	  var stringified = content.stringifySafe ? content.stringifySafe(null, '  ') : JSON.stringify(content, null, '  ');
 	  return _react2.default.createElement(
 	    'pre',
 	    null,
 	    _react2.default.createElement(
 	      'code',
 	      null,
-	      JSON.stringify(content, null, '  ')
+	      stringified
 	    )
 	  );
 	}
@@ -56113,7 +56129,6 @@
 	function Assets(_ref) {
 	  var items = _ref.items;
 	
-	  console.log(items);
 	  var assets = items.map(function (item) {
 	    return _react2.default.createElement(
 	      _reactRouter.Link,
