@@ -1,4 +1,5 @@
 import React, {createClass} from 'react'
+import scour from 'scourjs'
 import {Link} from 'react-router'
 import concat from 'unique-concat'
 import {getClient} from '../../services/contentfulClient'
@@ -11,7 +12,8 @@ import FeaturelessButton from '../FeaturelessButton'
 export default createClass({
   getInitialState () {
     return {
-      entries: [],
+      entry: undefined,
+      entries: scour([]),
       skip: 0,
       total: undefined,
       phase: 'loading'
@@ -22,29 +24,61 @@ export default createClass({
     this.loadEntries()
   },
 
-  findEntry (id) {
-    return this.state.entries.find((item) => item.sys.id === id)
+  componentWillReceiveProps (nextProps) {
+    if (this.props.params.entryId !== nextProps.params.entryId ||
+        this.props.params.contentTypeId !== nextProps.params.contentTypeId
+    ) {
+      this.loadEntries({
+        entryId: nextProps.params.entryId,
+        contentTypeId: nextProps.params.contentTypeId,
+        contentTypeChanged: this.props.params.contentTypeId !== nextProps.params.contentTypeId
+      })
+    }
   },
 
-  loadEntries () {
+  loadEntries ({entryId, contentTypeId, contentTypeChanged} = {}) {
+    const skip = contentTypeChanged ? 0 : this.state.skip
     Promise.all([
       getClient().getEntries({
-        content_type: this.props.params.contentTypeId,
-        skip: this.state.skip,
+        content_type: contentTypeId || this.props.params.contentTypeId,
+        skip: skip,
         limit: 100,
         order: 'sys.createdAt'
       }),
-      getContentTypes()
-    ]).then(([entriesResponse, contentTypes]) => {
-      entriesResponse = entriesResponse.toPlainObject()
-      entriesResponse.items = addContentTypesToEntries(entriesResponse.items, contentTypes)
+      getContentTypes(),
+      this.findEntry(entryId || this.props.params.entryId)
+    ]).then(([entriesResponse, contentTypes, entry]) => {
+      entriesResponse = scour(entriesResponse)
+                        .set('items', appendAndAugmentEntries(
+                          contentTypeChanged ? [] : this.state.entries.value,
+                          entriesResponse.items,
+                          contentTypes
+                        ))
       this.setState({
-        entries: concat(this.state.entries, entriesResponse.items, (entry) => entry.sys.id),
-        skip: this.state.skip + entriesResponse.limit,
+        entry: entry ? scour(addContentTypeToEntry(entry, contentTypes)) : entry,
+        entries: entriesResponse.go('items'),
+        skip: skip + entriesResponse.limit,
         total: entriesResponse.total,
         phase: 'loaded'
       })
     })
+  },
+
+  findEntry (id) {
+    if (!id) return Promise.resolve(undefined)
+    const entry = this.state.entries.find({'sys.id': {'$eq': id}})
+    if (entry) {
+      return Promise.resolve(entry.value)
+    } else {
+      return getClient().getEntries({'sys.id': id})
+      .then((response) => {
+        if (response.total > 0) {
+          return response.items[0]
+        } else {
+          throw new Error('Entry not found')
+        }
+      })
+    }
   },
 
   render () {
@@ -52,21 +86,20 @@ export default createClass({
       return <p>Loading your Entries...</p>
     } else {
       let contentElement, loadMoreElement
-      const backNavLink = <Link to='/entries/by-content-type'>&lt; Back</Link>
-      const listTitle = <h3>{this.state.entries[0].sys.contentType.name}</h3>
-      if (this.props.params.entryId) {
-        const entry = this.findEntry(this.props.params.entryId)
-        contentElement = <Entry entry={entry} />
+      const backNavLink = <Link to='/entries/by-content-type'>&lt; Content Type List</Link>
+      const listTitle = <h3>{this.state.entries.getAt(0).sys.contentType.name}</h3>
+      if (this.state.entry) {
+        contentElement = <Entry entry={this.state.entry.value} />
       } else {
         contentElement = <Placeholder content='Please select your Entry.' />
       }
 
-      if (this.state.entries.length < this.state.total) {
+      if (this.state.entries.len() < this.state.total) {
         loadMoreElement = <FeaturelessButton label='Load more' action={this.loadEntries}/>
       }
 
       return <TwoPanelList
-        items={this.state.entries}
+        items={this.state.entries.value}
         ListView={EntryListItem}
         NavView={backNavLink}
         TitleView={listTitle}
@@ -77,10 +110,20 @@ export default createClass({
   }
 })
 
+function appendAndAugmentEntries (existingEntries, newEntries, contentTypes) {
+  return concat(
+    existingEntries,
+    addContentTypesToEntries(newEntries, contentTypes),
+    (entry) => entry.sys.id
+  )
+}
+
 function addContentTypesToEntries (entries, contentTypes) {
-  return entries.map((entry) => {
-    const contentTypeId = entry.sys.contentType.sys.id
-    entry.sys.contentType = findContentTypeInList(contentTypes, contentTypeId)
-    return entry
-  })
+  return entries.map((entry) => addContentTypeToEntry(entry, contentTypes))
+}
+
+function addContentTypeToEntry (entry, contentTypes) {
+  const contentTypeId = entry.sys.contentType.sys.id
+  entry.sys.contentType = findContentTypeInList(contentTypes, contentTypeId)
+  return entry
 }
