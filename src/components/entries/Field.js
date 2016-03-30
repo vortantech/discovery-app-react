@@ -44,6 +44,11 @@ function renderContent (content, definition) {
     return renderBoolean(content)
   } else if (type === 'Text') {
     return <p dangerouslySetInnerHTML={renderMarkdown(content)}/>
+  } else if (content.sys || content.fields) {
+    return <div>
+      <p>Error rendering field {definition.id} with content:</p>
+      {renderObject(content)}
+    </div>
   } else {
     return <p>{content}</p>
   }
@@ -97,7 +102,8 @@ function renderLocation (content) {
 }
 
 function renderObject (content) {
-  return <pre><code>{JSON.stringify(content, null, '  ')}</code></pre>
+  const stringified = content.stringifySafe ? content.stringifySafe(null, '  ') : JSON.stringify(content, null, '  ')
+  return <pre><code>{stringified}</code></pre>
 }
 
 function renderBoolean (content) {
