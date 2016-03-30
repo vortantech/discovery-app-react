@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Redirect, useRouterHistory } from 'react-router'
-import { createHistory, useBasename } from 'history'
+import { Router, Route, IndexRoute, Redirect, browserHistory as history } from 'react-router'
 import localforage from 'localforage'
 import { initClient, getClient } from './services/contentfulClient'
 
@@ -15,10 +14,6 @@ import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
 
 localforage.setDriver(localforage.LOCALSTORAGE)
-
-let history = useBasename(useRouterHistory(createHistory))({
-  basename: process.env.NODE_ENV === 'production' ? '/discovery-app-react' : ''
-})
 
 render((
   <Router history={history}>
