@@ -64,6 +64,9 @@ function initializeClient (param, next, replace) {
 }
 
 // mocks the actual client initialization
+// unless the promise resolves instantly, the resolved promise handler above never even fires
 function initClient () {
-  return Promise.resolve('client initialized')
+  return new Promise(resolve => {
+    setTimeout(() => resolve('client initialized'), 200)
+  })
 }
