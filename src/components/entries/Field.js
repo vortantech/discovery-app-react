@@ -7,11 +7,11 @@ import Thumbnail from '../assets/Thumbnail'
 import EntryLinkContainer from './EntryLinkContainer'
 import marked from 'marked'
 
-function Field ({definition, content}) {
+function Field ({definition, content, location}) {
   return (
     <div styleName='field'>
       <h2>{definition.name}</h2>
-      {renderContent(content, definition)}
+      {renderContent(content, definition, location)}
     </div>
   )
 }
@@ -20,20 +20,20 @@ function Field ({definition, content}) {
  * Determines how to render content for the different kinds of fields
  * https://www.contentful.com/developers/docs/references/content-management-api/#/reference/content-types
  */
-function renderContent (content, definition) {
+function renderContent (content, definition, location) {
   const {type, linkType} = definition
   if (typeof content === 'undefined' || content === null) {
     return <p>No content</p>
   } else if (type === 'Link' && linkType === 'Entry' && content.sys.type === 'Entry') {
-    return renderEntryLink(content)
+    return renderEntryLink(content, location)
   } else if (type === 'Link' && linkType === 'Asset' && content.sys.type === 'Asset') {
-    return renderAssetLink(content)
+    return renderAssetLink(content, location)
   } else if (type === 'Link' && linkType === 'Entry' && content.sys.type === 'Link') {
     return <p>Link to {content.sys.id} is missing.</p>
   } else if (type === 'Link' && linkType === 'Asset' && content.sys.type === 'Link') {
     return <Thumbnail url='missing' fileName='Missing' description={`Link to ${content.sys.id} is missing.`}/>
   } else if (type === 'Array' && Array.isArray(content)) {
-    return renderList(content, definition.items)
+    return renderList(content, definition.items, location)
   } else if (type === 'Location' && isLocation(content)) {
     return renderLocation(content)
   } else if (type === 'Date') {
@@ -60,21 +60,21 @@ function renderMarkdown (content) {
   }
 }
 
-function renderEntryLink (content) {
-  return <EntryLinkContainer entryLink={content} />
+function renderEntryLink (content, location) {
+  return <EntryLinkContainer entryLink={content} location={location}/>
 }
 
-function renderAssetLink (content) {
-  return <Link styleName='image-link' to={`/assets/${content.sys.id}`}>
+function renderAssetLink (content, location) {
+  return <Link styleName='image-link' to={{pathname: `/assets/${content.sys.id}`, query: location.query}}>
     <Thumbnail url={content.fields.file.url} fileName={content.fields.file.fileName} />
   </Link>
 }
 
-function renderList (list, definition) {
+function renderList (list, definition, location) {
   const listStyle = determineListStyle(definition)
   const items = list.map((item, idx) => {
     return <div styleName={`${listStyle}-item`} key={idx}>
-      {renderContent(item, definition)}
+      {renderContent(item, definition, location)}
     </div>
   })
   return <div styleName={`${listStyle}-list`}>{items}</div>

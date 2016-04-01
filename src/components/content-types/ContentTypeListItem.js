@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-export default function ContentTypeListItem ({item}) {
+export default function ContentTypeListItem ({item, location}) {
   return (
     <li>
-      <Link to={`/entries/by-content-type/${item.sys.id}`}>{item.name}</Link>
+      <Link to={{pathname: `/entries/by-content-type/${item.sys.id}`, query: location.query}}>{item.name}</Link>
       <p>{item.description}</p>
     </li>
   )

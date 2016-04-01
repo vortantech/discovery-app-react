@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react'
 import CSSModules from 'react-css-modules'
 import styles from './TwoPanelList.css'
 
-function TwoPanelList ({items, ListView, NavView, TitleView, ContentView, ListActionView}) {
-  const list = items.map((item) => <ListView key={item.sys.id} item={item}/>)
+function TwoPanelList ({items, ListView, NavView, TitleView, ContentView, ListActionView, location}) {
+  const list = items.map((item) => <ListView key={item.sys.id} item={item} location={location}/>)
   const listContainerStyle = {
     height: (window.innerHeight - 200) + 'px'
   }

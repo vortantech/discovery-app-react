@@ -4,7 +4,7 @@ import CSSModules from 'react-css-modules'
 import styles from './Field.css'
 import Field from './Field'
 
-function Entry ({entry}) {
+function Entry ({entry, location}) {
   const contentType = scour(entry.sys.contentType)
   const fields = contentType.go('fields')
   const fieldsWithoutDisplay = fields.filter((field) => {
@@ -13,11 +13,11 @@ function Entry ({entry}) {
   const displayField = fields.find({id: contentType.get('displayField')}).value
   const remainingFields = fieldsWithoutDisplay.map((field) => {
     const id = field.get('id')
-    return <Field key={id} definition={field.value} content={entry.fields[id]}/>
+    return <Field key={id} definition={field.value} content={entry.fields[id]} location={location}/>
   })
   return (
     <div>
-      <Field key={displayField.id} definition={displayField} content={entry.fields[displayField.id]} styleName='field'/>
+      <Field key={displayField.id} definition={displayField} content={entry.fields[displayField.id]} styleName='field' location={location}/>
       {remainingFields}
     </div>
   )

@@ -24,7 +24,7 @@ export default createClass({
     if (this.state.phase === 'loading') {
       return <p>Loading your Assets...</p>
     } else {
-      return <Assets items={this.state.assets.items}/>
+      return <Assets items={this.state.assets.items} location={this.props.location}/>
     }
   }
 })

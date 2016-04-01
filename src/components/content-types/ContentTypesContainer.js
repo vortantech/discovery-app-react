@@ -34,6 +34,7 @@ export default createClass({
         ListView={ContentTypeListItem}
         TitleView={listTitle}
         ContentView={placeholder}
+        location={this.props.location}
         />
     }
   }

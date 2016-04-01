@@ -1,7 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, IndexRoute, Redirect, browserHistory as history } from 'react-router'
-import localforage from 'localforage'
 import { initClient, getClient } from './services/contentfulClient'
 
 import App from './components/App'
@@ -13,7 +12,10 @@ import AssetsContainer from './components/assets/AssetsContainer'
 import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
 
-localforage.setDriver(localforage.LOCALSTORAGE)
+let credentials = {
+  accessToken: '',
+  space: ''
+}
 
 render((
   <Router history={history}>
@@ -37,34 +39,43 @@ render((
  * If the client is already initialized, proceeds to the actual route
  */
 function requireCredentials (nextState, replace, next) {
-  if (!getClient()) {
-    localforage.getItem('credentials')
-    .then(
-      (credentials) => {
-        credentials
-          ? initializeClient(credentials, next, replace)
-          : goToRoot(replace, next)
-      },
-      () => goToRoot(replace, next)
-    )
+  const query = nextState.location.query
+  const newCredentials = {
+    accessToken: query.access_token,
+    space: query.space_id
+  }
+  if (credentialsExist(newCredentials) && (!getClient() || credentialsAreDifferent(credentials, newCredentials))) {
+    initializeClient(newCredentials, next, replace)
+  } else if (!query.space_id && !query.access_token) {
+    replace('/')
+    next()
   } else {
     next()
   }
 }
 
-function goToRoot (replace, next) {
-  replace('/')
-  next()
+function credentialsExist (credentials) {
+  return credentials.accessToken && credentials.space
+}
+
+function credentialsAreDifferent (credentials, newCredentials) {
+  return !(
+    credentials.accessToken === newCredentials.accessToken &&
+    credentials.space === newCredentials.space
+  )
 }
 
 /**
  * Initializes the client and proceeds to the actual route.
  * In case of failure redirects to error page with message
  */
-function initializeClient (credentials, next, replace) {
-  initClient(credentials.space, credentials.accessToken)
+function initializeClient (newCredentials, next, replace) {
+  initClient(newCredentials.space, newCredentials.accessToken)
   .then(
-    () => next(),
+    () => {
+      credentials = newCredentials
+      next()
+    },
     (err) => {
       replace({
         pathname: '/error',

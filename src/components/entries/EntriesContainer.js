@@ -86,10 +86,10 @@ export default createClass({
       return <p>Loading your Entries...</p>
     } else {
       let contentElement, loadMoreElement
-      const backNavLink = <Link to='/entries/by-content-type'>&lt; Content Type List</Link>
+      const backNavLink = <Link to={{pathname: '/entries/by-content-type', query: this.props.location.query}}>&lt; Content Type List</Link>
       const listTitle = <h3>{this.state.entries.getAt(0).sys.contentType.name}</h3>
       if (this.state.entry) {
-        contentElement = <Entry entry={this.state.entry.value} />
+        contentElement = <Entry entry={this.state.entry.value} location={this.props.location}/>
       } else {
         contentElement = <Placeholder content='Please select your Entry.' />
       }
@@ -105,6 +105,7 @@ export default createClass({
         TitleView={listTitle}
         ContentView={contentElement}
         ListActionView={loadMoreElement}
+        location={this.props.location}
         />
     }
   }
