@@ -7,12 +7,6 @@ const Form = createClass({
     router: PropTypes.object.isRequired
   },
 
-  getInitialState () {
-    return {
-      qsparam: ''
-    }
-  },
-
   submitAction () {
     this.context.router.push({
       pathname: '/page',
