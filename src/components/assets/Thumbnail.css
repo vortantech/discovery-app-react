@@ -1,8 +1,0 @@
-.file-icon {
-  border: 1px dashed #5B9FEF;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-}

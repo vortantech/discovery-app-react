@@ -1,5 +1,4 @@
 var path = require('path')
-var webpack = require('webpack')
 module.exports = {
   context: path.join(__dirname, 'src'),
   entry: './main.js',
@@ -14,21 +13,9 @@ module.exports = {
         test: /\.js?$/,
         exclude: /(node_modules|bower_components|dist)/,
         loader: 'babel'
-      },
-      {
-        test: /\.css$/,
-        loaders: [
-          'style?sourceMap',
-          'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-        ]
       }
     ]
   },
-  plugins: [
-    new webpack.EnvironmentPlugin([
-      'NODE_ENV'
-    ])
-  ],
   devServer: {
     historyApiFallback: true
   }
