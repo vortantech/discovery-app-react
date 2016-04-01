@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import CSSModules from 'react-css-modules'
+import { Link } from 'react-router'
 import styles from './Settings.css'
 
 function SettingsForm ({space, accessToken, handleChange, loadSpace, loadDemoSpace}) {
@@ -17,9 +18,9 @@ function SettingsForm ({space, accessToken, handleChange, loadSpace, loadDemoSpa
         <label for='accessToken'>Access Token</label>
         <input id='accessToken' type='text' value={accessToken} onChange={handleChange}/>
       </p>
-      <button onClick={loadSpace}>Load Space</button>
+      <button type='submit'>Load Space</button>
       <p>Still don't have a Space?</p>
-      <p><a href='#' onClick={loadDemoSpace}>Load a demo Space</a> or <a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
+      <p><Link to='/entries/by-content-type?space_id=cfexampleapi&access_token=b4c0n73n7fu1'>Load a demo Space</Link> or <a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
       <p>This application is Open Source. You can check out the <a href='https://github.com/contentful/contentful-discovery-react'>source code</a>, see how it was built, and suggest your own improvements.</p>
     </form>
   )

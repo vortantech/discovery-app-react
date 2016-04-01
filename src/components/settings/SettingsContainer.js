@@ -1,5 +1,4 @@
 import React, {createClass, PropTypes} from 'react'
-import localforage from 'localforage'
 import SettingsForm from './SettingsForm'
 import {resetClient} from '../../services/contentfulClient'
 
@@ -10,27 +9,20 @@ export default createClass({
 
   getInitialState () {
     return {
-      space: '',
-      accessToken: ''
+      space: 'cfexampleapi',
+      accessToken: 'b4c0n73n7fu1'
     }
   },
 
-  loadSpace ({space, accessToken}) {
+  loadSpace () {
     resetClient()
-    localforage.setItem('credentials', {
-      space: space || this.state.space,
-      accessToken: accessToken || this.state.accessToken
-    })
-    .then(
-      () => this.context.router.push('/entries/by-content-type'),
-      (err) => {
-        throw err
+    this.context.router.push({
+      pathname: '/entries/by-content-type',
+      query: {
+        access_token: this.state.accessToken,
+        space_id: this.state.space
       }
-    )
-  },
-
-  loadDemoSpace () {
-    this.loadSpace({space: 'cfexampleapi', accessToken: 'b4c0n73n7fu1'})
+    })
   },
 
   handleChange (event) {
@@ -45,7 +37,6 @@ export default createClass({
       accessToken={this.state.accessToken}
       handleChange={this.handleChange}
       loadSpace={this.loadSpace}
-      loadDemoSpace={this.loadDemoSpace}
       />
   }
 })
