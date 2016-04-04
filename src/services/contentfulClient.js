@@ -3,10 +3,11 @@ import {createClient} from 'contentful'
 let client
 let authorized
 
-function initClient (space, accessToken) {
+function initClient (space, accessToken, preview) {
   client = createClient({
     space: space,
-    accessToken: accessToken
+    accessToken: accessToken,
+    host: preview ? 'preview.contentful.com' : 'cdn.contentful.com'
   })
   return client.getSpace()
   .then(() => {

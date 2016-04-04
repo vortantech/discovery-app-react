@@ -1,7 +1,7 @@
 import React from 'react'
 import CSSModules from 'react-css-modules'
 import prettyBytes from 'pretty-bytes'
-import formatDate from '../format-date'
+import formatDate from '../../utils/format-date'
 import styles from './Asset.css'
 import Thumbnail from './Thumbnail'
 

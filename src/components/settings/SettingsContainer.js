@@ -1,6 +1,7 @@
 import React, {createClass, PropTypes} from 'react'
 import SettingsForm from './SettingsForm'
 import {resetClient} from '../../services/contentfulClient'
+import isPreviewSetInQuery from '../../utils/is-preview-set-in-query'
 
 export default createClass({
   contextTypes: {
@@ -10,7 +11,8 @@ export default createClass({
   getInitialState () {
     return {
       space: this.props.location.query.space_id || '',
-      accessToken: this.props.location.query.access_token || ''
+      accessToken: this.props.location.query.access_token || '',
+      preview: isPreviewSetInQuery(this.props.location.query) || false
     }
   },
 
@@ -21,7 +23,8 @@ export default createClass({
       pathname: '/entries/by-content-type',
       query: {
         access_token: this.state.accessToken,
-        space_id: this.state.space
+        space_id: this.state.space,
+        preview: this.state.preview
       }
     })
   },
@@ -36,6 +39,7 @@ export default createClass({
     return <SettingsForm
       space={this.state.space}
       accessToken={this.state.accessToken}
+      preview={this.state.preview}
       handleChange={this.handleChange}
       loadSpace={this.loadSpace}
       />

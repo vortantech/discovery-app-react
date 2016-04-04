@@ -11,6 +11,7 @@ import Entry from './components/entries/Entry'
 import AssetsContainer from './components/assets/AssetsContainer'
 import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
+import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
 let credentials = {
   accessToken: '',
@@ -42,7 +43,8 @@ function requireCredentials (nextState, replace, next) {
   const query = nextState.location.query
   const newCredentials = {
     accessToken: query.access_token,
-    space: query.space_id
+    space: query.space_id,
+    preview: isPreviewSetInQuery(query)
   }
   if (credentialsExist(newCredentials) && (!getClient() || credentialsAreDifferent(credentials, newCredentials))) {
     initializeClient(newCredentials, next, replace)
@@ -70,13 +72,16 @@ function credentialsAreDifferent (credentials, newCredentials) {
  * In case of failure redirects to error page with message
  */
 function initializeClient (newCredentials, next, replace) {
-  initClient(newCredentials.space, newCredentials.accessToken)
+  initClient(newCredentials.space, newCredentials.accessToken, newCredentials.preview)
   .then(
     () => {
       credentials = newCredentials
       next()
     },
     (err) => {
+      if (err.sys && err.sys.id === 'AccessTokenInvalid') {
+        err.message += 'If you are using a Preview API token make sure you check the Preview API box. Otherwise, make sure you are using a Delivery API token and the box is unchecked.'
+      }
       replace({
         pathname: '/error',
         state: {
