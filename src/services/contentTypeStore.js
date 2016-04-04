@@ -8,9 +8,9 @@ function loadFromStorage () {
 }
 
 function getContentTypes () {
-  if (!contentTypesStorage) {
-    loadFromStorage()
-    return contentTypesStorage
+  loadFromStorage()
+  if (contentTypesStorage) {
+    return Promise.resolve(contentTypesStorage)
   } else {
     return getClient().getContentTypes()
     .then((response) => {
