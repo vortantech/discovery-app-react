@@ -53650,9 +53650,9 @@
 	}
 	
 	function getContentTypes() {
-	  if (!contentTypesStorage) {
-	    loadFromStorage();
-	    return contentTypesStorage;
+	  loadFromStorage();
+	  if (contentTypesStorage) {
+	    return Promise.resolve(contentTypesStorage);
 	  } else {
 	    return (0, _contentfulClient.getClient)().getContentTypes().then(function (response) {
 	      storeContentTypes(response.items);
