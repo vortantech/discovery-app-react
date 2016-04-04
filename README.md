@@ -9,4 +9,5 @@ You can try out the app at https://contentful.github.io/discovery-app-react or y
 # Running it locally
 
 `npm install`
+
 `npm start`
