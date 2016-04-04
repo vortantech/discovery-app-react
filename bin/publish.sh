@@ -23,6 +23,7 @@ cat index.html | \
 rm -f $PAGES_DIR/index.mustache
 
 cp $PAGES_DIR/index.html $PAGES_DIR/404.html
+cp robots.txt $PAGES_DIR/robots.txt
 
 pushd $PAGES_DIR
 git add .
