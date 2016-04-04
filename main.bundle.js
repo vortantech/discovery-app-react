@@ -64,29 +64,33 @@
 	
 	var _SettingsContainer2 = _interopRequireDefault(_SettingsContainer);
 	
-	var _ContentTypesContainer = __webpack_require__(963);
+	var _ContentTypesContainer = __webpack_require__(964);
 	
 	var _ContentTypesContainer2 = _interopRequireDefault(_ContentTypesContainer);
 	
-	var _EntriesContainer = __webpack_require__(969);
+	var _EntriesContainer = __webpack_require__(970);
 	
 	var _EntriesContainer2 = _interopRequireDefault(_EntriesContainer);
 	
-	var _Entry = __webpack_require__(1003);
+	var _Entry = __webpack_require__(1004);
 	
 	var _Entry2 = _interopRequireDefault(_Entry);
 	
-	var _AssetsContainer = __webpack_require__(1016);
+	var _AssetsContainer = __webpack_require__(1017);
 	
 	var _AssetsContainer2 = _interopRequireDefault(_AssetsContainer);
 	
-	var _AssetContainer = __webpack_require__(1020);
+	var _AssetContainer = __webpack_require__(1021);
 	
 	var _AssetContainer2 = _interopRequireDefault(_AssetContainer);
 	
-	var _Error = __webpack_require__(1026);
+	var _Error = __webpack_require__(1027);
 	
 	var _Error2 = _interopRequireDefault(_Error);
+	
+	var _isPreviewSetInQuery = __webpack_require__(963);
+	
+	var _isPreviewSetInQuery2 = _interopRequireDefault(_isPreviewSetInQuery);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -124,7 +128,8 @@
 	  var query = nextState.location.query;
 	  var newCredentials = {
 	    accessToken: query.access_token,
-	    space: query.space_id
+	    space: query.space_id,
+	    preview: (0, _isPreviewSetInQuery2.default)(query)
 	  };
 	  if (credentialsExist(newCredentials) && (!(0, _contentfulClient.getClient)() || credentialsAreDifferent(credentials, newCredentials))) {
 	    initializeClient(newCredentials, next, replace);
@@ -149,10 +154,13 @@
 	 * In case of failure redirects to error page with message
 	 */
 	function initializeClient(newCredentials, next, replace) {
-	  (0, _contentfulClient.initClient)(newCredentials.space, newCredentials.accessToken).then(function () {
+	  (0, _contentfulClient.initClient)(newCredentials.space, newCredentials.accessToken, newCredentials.preview).then(function () {
 	    credentials = newCredentials;
 	    next();
 	  }, function (err) {
+	    if (err.sys && err.sys.id === 'AccessTokenInvalid') {
+	      err.message += 'If you are using a Preview API token make sure you check the Preview API box. Otherwise, make sure you are using a Delivery API token and the box is unchecked.';
+	    }
 	    replace({
 	      pathname: '/error',
 	      state: {
@@ -24555,10 +24563,11 @@
 	var client = void 0;
 	var authorized = void 0;
 	
-	function initClient(space, accessToken) {
+	function initClient(space, accessToken, preview) {
 	  client = (0, _contentful.createClient)({
 	    space: space,
-	    accessToken: accessToken
+	    accessToken: accessToken,
+	    host: preview ? 'preview.contentful.com' : 'cdn.contentful.com'
 	  });
 	  return client.getSpace().then(function () {
 	    authorized = true;
@@ -53279,6 +53288,10 @@
 	
 	var _contentfulClient = __webpack_require__(223);
 	
+	var _isPreviewSetInQuery = __webpack_require__(963);
+	
+	var _isPreviewSetInQuery2 = _interopRequireDefault(_isPreviewSetInQuery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _react.createClass)({
@@ -53289,7 +53302,8 @@
 	  getInitialState: function getInitialState() {
 	    return {
 	      space: this.props.location.query.space_id || '',
-	      accessToken: this.props.location.query.access_token || ''
+	      accessToken: this.props.location.query.access_token || '',
+	      preview: (0, _isPreviewSetInQuery2.default)(this.props.location.query) || false
 	    };
 	  },
 	  loadSpace: function loadSpace(event) {
@@ -53299,7 +53313,8 @@
 	      pathname: '/entries/by-content-type',
 	      query: {
 	        access_token: this.state.accessToken,
-	        space_id: this.state.space
+	        space_id: this.state.space,
+	        preview: this.state.preview
 	      }
 	    });
 	  },
@@ -53312,6 +53327,7 @@
 	    return _react2.default.createElement(_SettingsForm2.default, {
 	      space: this.state.space,
 	      accessToken: this.state.accessToken,
+	      preview: this.state.preview,
 	      handleChange: this.handleChange,
 	      loadSpace: this.loadSpace
 	    });
@@ -53347,6 +53363,7 @@
 	function SettingsForm(_ref) {
 	  var space = _ref.space;
 	  var accessToken = _ref.accessToken;
+	  var preview = _ref.preview;
 	  var handleChange = _ref.handleChange;
 	  var loadSpace = _ref.loadSpace;
 	  var loadDemoSpace = _ref.loadDemoSpace;
@@ -53381,33 +53398,63 @@
 	      _react2.default.createElement(
 	        'a',
 	        { href: 'https://app.contentful.com' },
-	        'content editing interface'
+	        'Contentful web interface'
 	      )
 	    ),
 	    _react2.default.createElement(
-	      'p',
-	      null,
+	      'div',
+	      { styleName: 'form-container' },
 	      _react2.default.createElement(
-	        'label',
-	        { 'for': 'space' },
-	        'Space ID'
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'space', styleName: 'label-title' },
+	          'Space ID'
+	        ),
+	        _react2.default.createElement('input', { id: 'space', type: 'text', value: space, onChange: handleChange })
 	      ),
-	      _react2.default.createElement('input', { id: 'space', type: 'text', value: space, onChange: handleChange })
-	    ),
-	    _react2.default.createElement(
-	      'p',
-	      null,
 	      _react2.default.createElement(
-	        'label',
-	        { 'for': 'accessToken' },
-	        'Access Token'
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'accessToken', styleName: 'label-title' },
+	          'Access Token'
+	        ),
+	        _react2.default.createElement('input', { id: 'accessToken', type: 'text', value: accessToken, onChange: handleChange })
 	      ),
-	      _react2.default.createElement('input', { id: 'accessToken', type: 'text', value: accessToken, onChange: handleChange })
-	    ),
-	    _react2.default.createElement(
-	      'button',
-	      { type: 'submit' },
-	      'Load Space'
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        _react2.default.createElement(
+	          'h3',
+	          { styleName: 'label-title' },
+	          'Preview API'
+	        ),
+	        _react2.default.createElement('input', { id: 'preview', type: 'checkbox', checked: preview, styleName: 'checkbox', onChange: handleChange }),
+	        _react2.default.createElement(
+	          'label',
+	          { 'for': 'preview' },
+	          'Check this if you want to use the ',
+	          _react2.default.createElement(
+	            'a',
+	            { href: 'https://www.contentful.com/developers/docs/concepts/apis/#content-preview-api' },
+	            'Preview API'
+	          ),
+	          '.'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'If you check the box above, make sure the Access Token is valid for use with the Preview API.'
+	      ),
+	      _react2.default.createElement(
+	        'button',
+	        { type: 'submit' },
+	        'Load Space'
+	      )
 	    ),
 	    _react2.default.createElement(
 	      'p',
@@ -53487,15 +53534,32 @@
 	
 	
 	// module
-	exports.push([module.id, ".components-settings-___Settings__settings-form___3XHVN {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.components-settings-___Settings__settings-form___3XHVN > * {\n  margin-bottom: 25px;\n}\n\n.components-settings-___Settings__settings-form___3XHVN p {\n  text-align: center;\n}\n\n.components-settings-___Settings__settings-form___3XHVN input,\n.components-settings-___Settings__settings-form___3XHVN button {\n  font-size: 14px;\n  padding: 0 10px;\n  height: 38px;\n  border-radius: 2px;\n}\n\n.components-settings-___Settings__settings-form___3XHVN input {\n  width: 350px;\n  background-color: #F7F9FA;\n  border: 1px solid #DBE3E7;\n  color: #536171;\n}\n\n.components-settings-___Settings__settings-form___3XHVN label {\n  display: block;\n  margin-bottom: 4px;\n  font-weight: bold;\n}\n\n.components-settings-___Settings__settings-form___3XHVN button {\n  width: 200px;\n  border: 1px solid #2b67ad;\n  background: linear-gradient(0deg, #3C80CF 0%, #5B9FEF 100%) no-repeat;\n  color: white;\n}\n", ""]);
+	exports.push([module.id, ".components-settings-___Settings__settings-form___3XHVN,\n.components-settings-___Settings__form-container___1bQLH {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.components-settings-___Settings__form-container___1bQLH {\n  margin: 35px 0px 65px;\n}\n\n.components-settings-___Settings__settings-form___3XHVN > p,\n.components-settings-___Settings__form-container___1bQLH > p {\n  margin-bottom: 25px;\n}\n\n.components-settings-___Settings__settings-form___3XHVN p {\n  text-align: center;\n}\n\n.components-settings-___Settings__settings-form___3XHVN input,\n.components-settings-___Settings__settings-form___3XHVN button {\n  font-size: 14px;\n  padding: 0 10px;\n  height: 38px;\n  border-radius: 2px;\n}\n\n.components-settings-___Settings__settings-form___3XHVN input {\n  width: 350px;\n  background-color: #F7F9FA;\n  border: 1px solid #DBE3E7;\n  color: #536171;\n}\n\n.components-settings-___Settings__settings-form___3XHVN .components-settings-___Settings__label-title___11Eb- {\n  display: block;\n  margin-bottom: 4px;\n  font-size: 16px;\n  font-weight: bold;\n}\n\n.components-settings-___Settings__settings-form___3XHVN button {\n  width: 200px;\n  border: 1px solid #2b67ad;\n  background: linear-gradient(0deg, #3C80CF 0%, #5B9FEF 100%) no-repeat;\n  color: white;\n}\n\ninput.components-settings-___Settings__checkbox___1yZlr {\n  width: auto;\n  height: auto;\n  line-height: 20px;\n  vertical-align: middle;\n  margin-right: 5px;\n}\n", ""]);
 	
 	// exports
 	exports.locals = {
-		"settings-form": "components-settings-___Settings__settings-form___3XHVN"
+		"settings-form": "components-settings-___Settings__settings-form___3XHVN",
+		"form-container": "components-settings-___Settings__form-container___1bQLH",
+		"label-title": "components-settings-___Settings__label-title___11Eb-",
+		"checkbox": "components-settings-___Settings__checkbox___1yZlr"
 	};
 
 /***/ },
 /* 963 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = isPreviewSetInQuery;
+	function isPreviewSetInQuery(query) {
+	  return 'preview' in query && query.preview !== 'false' && query.preview !== '';
+	}
+
+/***/ },
+/* 964 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53510,13 +53574,13 @@
 	
 	var _contentfulClient = __webpack_require__(223);
 	
-	var _contentTypeStore = __webpack_require__(964);
+	var _contentTypeStore = __webpack_require__(965);
 	
-	var _TwoPanelList = __webpack_require__(965);
+	var _TwoPanelList = __webpack_require__(966);
 	
 	var _TwoPanelList2 = _interopRequireDefault(_TwoPanelList);
 	
-	var _ContentTypeListItem = __webpack_require__(968);
+	var _ContentTypeListItem = __webpack_require__(969);
 	
 	var _ContentTypeListItem2 = _interopRequireDefault(_ContentTypeListItem);
 	
@@ -53566,7 +53630,7 @@
 	});
 
 /***/ },
-/* 964 */
+/* 965 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53622,7 +53686,7 @@
 	exports.findContentType = findContentType;
 
 /***/ },
-/* 965 */
+/* 966 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53640,7 +53704,7 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _TwoPanelList = __webpack_require__(966);
+	var _TwoPanelList = __webpack_require__(967);
 	
 	var _TwoPanelList2 = _interopRequireDefault(_TwoPanelList);
 	
@@ -53718,13 +53782,13 @@
 	}, _TwoPanelList2.default);
 
 /***/ },
-/* 966 */
+/* 967 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(967);
+	var content = __webpack_require__(968);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -53744,7 +53808,7 @@
 	}
 
 /***/ },
-/* 967 */
+/* 968 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
@@ -53765,7 +53829,7 @@
 	};
 
 /***/ },
-/* 968 */
+/* 969 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53804,7 +53868,7 @@
 	}
 
 /***/ },
-/* 969 */
+/* 970 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53819,33 +53883,33 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _scourjs = __webpack_require__(970);
+	var _scourjs = __webpack_require__(971);
 	
 	var _scourjs2 = _interopRequireDefault(_scourjs);
 	
 	var _reactRouter = __webpack_require__(166);
 	
-	var _uniqueConcat = __webpack_require__(1001);
+	var _uniqueConcat = __webpack_require__(1002);
 	
 	var _uniqueConcat2 = _interopRequireDefault(_uniqueConcat);
 	
 	var _contentfulClient = __webpack_require__(223);
 	
-	var _contentTypeStore = __webpack_require__(964);
+	var _contentTypeStore = __webpack_require__(965);
 	
-	var _TwoPanelList = __webpack_require__(965);
+	var _TwoPanelList = __webpack_require__(966);
 	
 	var _TwoPanelList2 = _interopRequireDefault(_TwoPanelList);
 	
-	var _EntryListItem = __webpack_require__(1002);
+	var _EntryListItem = __webpack_require__(1003);
 	
 	var _EntryListItem2 = _interopRequireDefault(_EntryListItem);
 	
-	var _Entry = __webpack_require__(1003);
+	var _Entry = __webpack_require__(1004);
 	
 	var _Entry2 = _interopRequireDefault(_Entry);
 	
-	var _FeaturelessButton = __webpack_require__(1013);
+	var _FeaturelessButton = __webpack_require__(1014);
 	
 	var _FeaturelessButton2 = _interopRequireDefault(_FeaturelessButton);
 	
@@ -53983,7 +54047,7 @@
 	}
 
 /***/ },
-/* 970 */
+/* 971 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* eslint-disable new-cap */
@@ -53993,14 +54057,14 @@
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
-	var Search = __webpack_require__(971);
-	var assign = __webpack_require__(976);
-	var buildExtensions = __webpack_require__(982);
-	var normalizeKeypath = __webpack_require__(985);
-	var utils = __webpack_require__(986);
-	var negate = __webpack_require__(1000);
-	var sortValues = __webpack_require__(999);
-	var toFunction = __webpack_require__(997);
+	var Search = __webpack_require__(972);
+	var assign = __webpack_require__(977);
+	var buildExtensions = __webpack_require__(983);
+	var normalizeKeypath = __webpack_require__(986);
+	var utils = __webpack_require__(987);
+	var negate = __webpack_require__(1001);
+	var sortValues = __webpack_require__(1000);
+	var toFunction = __webpack_require__(998);
 	
 	/**
 	 * scour : scour(object)
@@ -54998,23 +55062,23 @@
 	module.exports = scour;
 
 /***/ },
-/* 971 */
+/* 972 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var normalizeKeypath = __webpack_require__(972);
-	var cloneWithoutKeys = __webpack_require__(973);
-	var toAST = __webpack_require__(974);
-	var assign = __webpack_require__(976);
-	var each = __webpack_require__(977);
-	var stringify = __webpack_require__(980);
+	var normalizeKeypath = __webpack_require__(973);
+	var cloneWithoutKeys = __webpack_require__(974);
+	var toAST = __webpack_require__(975);
+	var assign = __webpack_require__(977);
+	var each = __webpack_require__(978);
+	var stringify = __webpack_require__(981);
 	
-	var operands = __webpack_require__(975);
-	var indexers = __webpack_require__(981);
-	var fallbacks = __webpack_require__(978);
+	var operands = __webpack_require__(976);
+	var indexers = __webpack_require__(982);
+	var fallbacks = __webpack_require__(979);
 	
 	/**
 	 * Searcher : Searcher(data)
@@ -55320,7 +55384,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 972 */
+/* 973 */
 /***/ function(module, exports) {
 
 	/**
@@ -55349,7 +55413,7 @@
 
 
 /***/ },
-/* 973 */
+/* 974 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -55369,15 +55433,15 @@
 	};
 
 /***/ },
-/* 974 */
+/* 975 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var operands = __webpack_require__(975);
-	var fallbacks = __webpack_require__(978);
+	var operands = __webpack_require__(976);
+	var fallbacks = __webpack_require__(979);
 	
 	/*
 	 * Converts a MongoDB-style query to an AST (abstract syntax tree) that's
@@ -55423,16 +55487,16 @@
 	};
 
 /***/ },
-/* 975 */
+/* 976 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
-	var cloneWithoutKeys = __webpack_require__(973);
-	var assign = __webpack_require__(976);
-	var each = __webpack_require__(977);
+	var cloneWithoutKeys = __webpack_require__(974);
+	var assign = __webpack_require__(977);
+	var each = __webpack_require__(978);
 	
 	/**
 	 * Internal: operands.
@@ -55564,7 +55628,7 @@
 	}
 
 /***/ },
-/* 976 */
+/* 977 */
 /***/ function(module, exports) {
 
 	/* eslint-disable no-unused-vars */
@@ -55609,7 +55673,7 @@
 
 
 /***/ },
-/* 977 */
+/* 978 */
 /***/ function(module, exports) {
 
 	/**
@@ -55644,13 +55708,13 @@
 
 
 /***/ },
-/* 978 */
+/* 979 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var normalizeKeypath = __webpack_require__(972);
-	var get = __webpack_require__(979);
+	var normalizeKeypath = __webpack_require__(973);
+	var get = __webpack_require__(980);
 	
 	var fallbacks = {};
 	
@@ -55795,7 +55859,7 @@
 	module.exports = fallbacks;
 
 /***/ },
-/* 979 */
+/* 980 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -55813,7 +55877,7 @@
 
 
 /***/ },
-/* 980 */
+/* 981 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55833,13 +55897,13 @@
 	module.exports = JSON.stringify;
 
 /***/ },
-/* 981 */
+/* 982 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var stringify = __webpack_require__(980);
-	var get = __webpack_require__(979);
+	var stringify = __webpack_require__(981);
+	var get = __webpack_require__(980);
 	var indexers = {};
 	
 	indexers['$eq'] = function (item, key, field, index) {
@@ -55851,12 +55915,12 @@
 	module.exports = indexers;
 
 /***/ },
-/* 982 */
+/* 983 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var map = __webpack_require__(983);
+	var map = __webpack_require__(984);
 	
 	/**
 	 * Internal: builds extensions based on parameters passed onto `.use()`.
@@ -55876,10 +55940,10 @@
 	};
 
 /***/ },
-/* 983 */
+/* 984 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(984)
+	var forEach = __webpack_require__(985)
 	
 	module.exports = function map (each, fn) {
 	  if (typeof each !== 'function') each = forEach.bind(this, each)
@@ -55890,7 +55954,7 @@
 
 
 /***/ },
-/* 984 */
+/* 985 */
 /***/ function(module, exports) {
 
 	/**
@@ -55925,7 +55989,7 @@
 
 
 /***/ },
-/* 985 */
+/* 986 */
 /***/ function(module, exports) {
 
 	/**
@@ -55951,7 +56015,7 @@
 
 
 /***/ },
-/* 986 */
+/* 987 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -55972,7 +56036,7 @@
 	 * This is also available as `require('scourjs/utilities/get')`.
 	 */
 	
-	exports.get = __webpack_require__(987)
+	exports.get = __webpack_require__(988)
 	
 	/**
 	 * scour.set : scour.set(object, keypath, value)
@@ -55986,7 +56050,7 @@
 	 * This is also available as `require('scourjs/utilities/set')`.
 	 */
 	
-	exports.set = __webpack_require__(988)
+	exports.set = __webpack_require__(989)
 	
 	/**
 	 * scour.del : scour.del(object, keypath)
@@ -56000,7 +56064,7 @@
 	 * This is also available as `require('scourjs/utilities/del')`.
 	 */
 	
-	exports.del = __webpack_require__(990)
+	exports.del = __webpack_require__(991)
 	
 	/**
 	 * scour.extendIn : scour.extendIn(object, keypath, extensions...)
@@ -56014,7 +56078,7 @@
 	 * This is also available as `require('scourjs/utilities/extend_in')`.
 	 */
 	
-	exports.extendIn = __webpack_require__(992)
+	exports.extendIn = __webpack_require__(993)
 	
 	/**
 	 * scour.each : scour.each(iterable, fn)
@@ -56028,7 +56092,7 @@
 	 * [Array#forEach]: http://devdocs.io/javascript/global_objects/array/foreach
 	 */
 	
-	exports.each = __webpack_require__(984)
+	exports.each = __webpack_require__(985)
 	
 	/**
 	 * scour.map : scour.map(iterable, fn)
@@ -56044,7 +56108,7 @@
 	 * [Array#map]: http://devdocs.io/javascript/global_objects/array/map
 	 */
 	
-	exports.map = __webpack_require__(983)
+	exports.map = __webpack_require__(984)
 	
 	/**
 	 * scour.mapObject : scour.mapObject(iterable, fn)
@@ -56065,7 +56129,7 @@
 	 * This is also available as `require('scourjs/utilities/map_object')`.
 	 */
 	
-	exports.mapObject = __webpack_require__(993)
+	exports.mapObject = __webpack_require__(994)
 	
 	/**
 	 * scour.indexedMap : scour.indexedMap(iterable, fn)
@@ -56094,7 +56158,7 @@
 	 * This is also available as `require('scourjs/utilities/indexed_map')`.
 	 */
 	
-	exports.indexedMap = __webpack_require__(994)
+	exports.indexedMap = __webpack_require__(995)
 	
 	/**
 	 * scour.filter : scour.filter(iterable, function(val, key), [isArray])
@@ -56112,7 +56176,7 @@
 	 * [Array#filter]: http://devdocs.io/javascript/global_objects/array/filter
 	 */
 	
-	exports.filter = __webpack_require__(995)
+	exports.filter = __webpack_require__(996)
 	
 	/**
 	 * scour.sortBy : scour.sortBy(iterable, criteria)
@@ -56124,11 +56188,11 @@
 	 * This is also available as `require('scourjs/utilities/sort_by')`.
 	 */
 	
-	exports.sortBy = __webpack_require__(996)
+	exports.sortBy = __webpack_require__(997)
 
 
 /***/ },
-/* 987 */
+/* 988 */
 /***/ function(module, exports) {
 
 	'use strict'
@@ -56146,12 +56210,12 @@
 
 
 /***/ },
-/* 988 */
+/* 989 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
 	
-	var clone = __webpack_require__(989)
+	var clone = __webpack_require__(990)
 	
 	/**
 	 * Sets a `keypath` into an `object` immutably.
@@ -56191,11 +56255,11 @@
 
 
 /***/ },
-/* 989 */
+/* 990 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function clone (object) {
-	  var assign = __webpack_require__(976)
+	  var assign = __webpack_require__(977)
 	  return Array.isArray(object)
 	    ? [].slice.call(object)
 	    : assign({}, object)
@@ -56203,13 +56267,13 @@
 
 
 /***/ },
-/* 990 */
+/* 991 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
 	
-	var clone = __webpack_require__(989)
-	var cloneWithout = __webpack_require__(991)
+	var clone = __webpack_require__(990)
+	var cloneWithout = __webpack_require__(992)
 	
 	/**
 	 * Deletes a `keypath` from an `object` immutably.
@@ -56251,7 +56315,7 @@
 
 
 /***/ },
-/* 991 */
+/* 992 */
 /***/ function(module, exports) {
 
 	/**
@@ -56275,12 +56339,12 @@
 
 
 /***/ },
-/* 992 */
+/* 993 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var get = __webpack_require__(987)
-	var set = __webpack_require__(988)
-	var assign = __webpack_require__(976)
+	var get = __webpack_require__(988)
+	var set = __webpack_require__(989)
+	var assign = __webpack_require__(977)
 	
 	module.exports = function extendIn (source, keypath, extensions) {
 	  if (keypath.length === 0) return assign({}, source, extensions)
@@ -56296,10 +56360,10 @@
 
 
 /***/ },
-/* 993 */
+/* 994 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(984)
+	var forEach = __webpack_require__(985)
 	
 	module.exports = function mapObject (each, fn) {
 	  if (typeof each !== 'function') each = forEach.bind(this, each)
@@ -56310,10 +56374,10 @@
 
 
 /***/ },
-/* 994 */
+/* 995 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(984)
+	var forEach = __webpack_require__(985)
 	
 	module.exports = function indexedMap (each, fn) {
 	  /* istanbul ignore next */
@@ -56328,10 +56392,10 @@
 
 
 /***/ },
-/* 995 */
+/* 996 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var forEach = __webpack_require__(984)
+	var forEach = __webpack_require__(985)
 	
 	module.exports = function filter (each, fn, _isArray) {
 	  var isArray = typeof _isArray !== 'undefined' ? _isArray : Array.isArray(each)
@@ -56356,13 +56420,13 @@
 
 
 /***/ },
-/* 996 */
+/* 997 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var map = __webpack_require__(983)
-	var forEach = __webpack_require__(984)
-	var toFunction = __webpack_require__(997)
-	var sortValues = __webpack_require__(999)
+	var map = __webpack_require__(984)
+	var forEach = __webpack_require__(985)
+	var toFunction = __webpack_require__(998)
+	var sortValues = __webpack_require__(1000)
 	
 	module.exports = function sortBy (each, condition, isArray) {
 	  if (typeof isArray === 'undefined' && !Array.isArray(each)) isArray = false
@@ -56379,7 +56443,7 @@
 
 
 /***/ },
-/* 997 */
+/* 998 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -56389,9 +56453,9 @@
 	
 	var expr;
 	try {
-	  expr = __webpack_require__(998);
+	  expr = __webpack_require__(999);
 	} catch(e) {
-	  expr = __webpack_require__(998);
+	  expr = __webpack_require__(999);
 	}
 	
 	/**
@@ -56537,7 +56601,7 @@
 
 
 /***/ },
-/* 998 */
+/* 999 */
 /***/ function(module, exports) {
 
 	/**
@@ -56628,11 +56692,11 @@
 
 
 /***/ },
-/* 999 */
+/* 1000 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexedMap = __webpack_require__(994)
-	var map = __webpack_require__(983)
+	var indexedMap = __webpack_require__(995)
+	var map = __webpack_require__(984)
 	
 	/*
 	 * Internal: Sorts a `{ key, value, criteria, index }` tuple array by
@@ -56660,7 +56724,7 @@
 
 
 /***/ },
-/* 1000 */
+/* 1001 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -56676,7 +56740,7 @@
 	};
 
 /***/ },
-/* 1001 */
+/* 1002 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56715,7 +56779,7 @@
 
 
 /***/ },
-/* 1002 */
+/* 1003 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56750,7 +56814,7 @@
 	}
 
 /***/ },
-/* 1003 */
+/* 1004 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56763,7 +56827,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _scourjs = __webpack_require__(970);
+	var _scourjs = __webpack_require__(971);
 	
 	var _scourjs2 = _interopRequireDefault(_scourjs);
 	
@@ -56771,11 +56835,11 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _Field = __webpack_require__(1004);
+	var _Field = __webpack_require__(1005);
 	
 	var _Field2 = _interopRequireDefault(_Field);
 	
-	var _Field3 = __webpack_require__(1006);
+	var _Field3 = __webpack_require__(1007);
 	
 	var _Field4 = _interopRequireDefault(_Field3);
 	
@@ -56806,13 +56870,13 @@
 	exports.default = (0, _reactCssModules2.default)(Entry, _Field2.default);
 
 /***/ },
-/* 1004 */
+/* 1005 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(1005);
+	var content = __webpack_require__(1006);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -56832,7 +56896,7 @@
 	}
 
 /***/ },
-/* 1005 */
+/* 1006 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
@@ -56855,7 +56919,7 @@
 	};
 
 /***/ },
-/* 1006 */
+/* 1007 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56874,23 +56938,23 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _Field = __webpack_require__(1004);
+	var _Field = __webpack_require__(1005);
 	
 	var _Field2 = _interopRequireDefault(_Field);
 	
-	var _formatDate = __webpack_require__(1007);
+	var _formatDate = __webpack_require__(1008);
 	
 	var _formatDate2 = _interopRequireDefault(_formatDate);
 	
-	var _Thumbnail = __webpack_require__(1008);
+	var _Thumbnail = __webpack_require__(1009);
 	
 	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
 	
-	var _EntryLinkContainer = __webpack_require__(1011);
+	var _EntryLinkContainer = __webpack_require__(1012);
 	
 	var _EntryLinkContainer2 = _interopRequireDefault(_EntryLinkContainer);
 	
-	var _marked = __webpack_require__(1012);
+	var _marked = __webpack_require__(1013);
 	
 	var _marked2 = _interopRequireDefault(_marked);
 	
@@ -57068,7 +57132,7 @@
 	exports.default = (0, _reactCssModules2.default)(Field, _Field2.default);
 
 /***/ },
-/* 1007 */
+/* 1008 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -57082,7 +57146,7 @@
 	}
 
 /***/ },
-/* 1008 */
+/* 1009 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57099,7 +57163,7 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _Thumbnail = __webpack_require__(1009);
+	var _Thumbnail = __webpack_require__(1010);
 	
 	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
 	
@@ -57131,13 +57195,13 @@
 	exports.default = (0, _reactCssModules2.default)(Thumbnail, _Thumbnail2.default);
 
 /***/ },
-/* 1009 */
+/* 1010 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(1010);
+	var content = __webpack_require__(1011);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -57157,7 +57221,7 @@
 	}
 
 /***/ },
-/* 1010 */
+/* 1011 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
@@ -57173,7 +57237,7 @@
 	};
 
 /***/ },
-/* 1011 */
+/* 1012 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57188,7 +57252,7 @@
 	
 	var _reactRouter = __webpack_require__(166);
 	
-	var _contentTypeStore = __webpack_require__(964);
+	var _contentTypeStore = __webpack_require__(965);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -57232,7 +57296,7 @@
 	});
 
 /***/ },
-/* 1012 */
+/* 1013 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -58524,7 +58588,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 1013 */
+/* 1014 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58541,7 +58605,7 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _FeaturelessButton = __webpack_require__(1014);
+	var _FeaturelessButton = __webpack_require__(1015);
 	
 	var _FeaturelessButton2 = _interopRequireDefault(_FeaturelessButton);
 	
@@ -58561,13 +58625,13 @@
 	exports.default = (0, _reactCssModules2.default)(FeaturelessButton, _FeaturelessButton2.default);
 
 /***/ },
-/* 1014 */
+/* 1015 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(1015);
+	var content = __webpack_require__(1016);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -58587,7 +58651,7 @@
 	}
 
 /***/ },
-/* 1015 */
+/* 1016 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
@@ -58603,7 +58667,7 @@
 	};
 
 /***/ },
-/* 1016 */
+/* 1017 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58618,7 +58682,7 @@
 	
 	var _contentfulClient = __webpack_require__(223);
 	
-	var _Assets = __webpack_require__(1017);
+	var _Assets = __webpack_require__(1018);
 	
 	var _Assets2 = _interopRequireDefault(_Assets);
 	
@@ -58655,7 +58719,7 @@
 	});
 
 /***/ },
-/* 1017 */
+/* 1018 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58674,11 +58738,11 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _Assets = __webpack_require__(1018);
+	var _Assets = __webpack_require__(1019);
 	
 	var _Assets2 = _interopRequireDefault(_Assets);
 	
-	var _Thumbnail = __webpack_require__(1008);
+	var _Thumbnail = __webpack_require__(1009);
 	
 	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
 	
@@ -58710,13 +58774,13 @@
 	exports.default = (0, _reactCssModules2.default)(Assets, _Assets2.default);
 
 /***/ },
-/* 1018 */
+/* 1019 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(1019);
+	var content = __webpack_require__(1020);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -58736,7 +58800,7 @@
 	}
 
 /***/ },
-/* 1019 */
+/* 1020 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
@@ -58754,7 +58818,7 @@
 	};
 
 /***/ },
-/* 1020 */
+/* 1021 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58769,7 +58833,7 @@
 	
 	var _contentfulClient = __webpack_require__(223);
 	
-	var _Asset = __webpack_require__(1021);
+	var _Asset = __webpack_require__(1022);
 	
 	var _Asset2 = _interopRequireDefault(_Asset);
 	
@@ -58805,7 +58869,7 @@
 	});
 
 /***/ },
-/* 1021 */
+/* 1022 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58822,19 +58886,19 @@
 	
 	var _reactCssModules2 = _interopRequireDefault(_reactCssModules);
 	
-	var _prettyBytes = __webpack_require__(1022);
+	var _prettyBytes = __webpack_require__(1023);
 	
 	var _prettyBytes2 = _interopRequireDefault(_prettyBytes);
 	
-	var _formatDate = __webpack_require__(1007);
+	var _formatDate = __webpack_require__(1008);
 	
 	var _formatDate2 = _interopRequireDefault(_formatDate);
 	
-	var _Asset = __webpack_require__(1024);
+	var _Asset = __webpack_require__(1025);
 	
 	var _Asset2 = _interopRequireDefault(_Asset);
 	
-	var _Thumbnail = __webpack_require__(1008);
+	var _Thumbnail = __webpack_require__(1009);
 	
 	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
 	
@@ -58935,11 +58999,11 @@
 	exports.default = (0, _reactCssModules2.default)(Asset, _Asset2.default);
 
 /***/ },
-/* 1022 */
+/* 1023 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var numberIsNan = __webpack_require__(1023);
+	var numberIsNan = __webpack_require__(1024);
 	
 	module.exports = function (num) {
 		if (typeof num !== 'number' || numberIsNan(num)) {
@@ -58968,7 +59032,7 @@
 
 
 /***/ },
-/* 1023 */
+/* 1024 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -58978,13 +59042,13 @@
 
 
 /***/ },
-/* 1024 */
+/* 1025 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(1025);
+	var content = __webpack_require__(1026);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(958)(content, {"sourceMap":true});
@@ -59004,12 +59068,12 @@
 	}
 
 /***/ },
-/* 1025 */
+/* 1026 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(957)();
 	// imports
-	exports.i(__webpack_require__(1005), undefined);
+	exports.i(__webpack_require__(1006), undefined);
 	
 	// module
 	exports.push([module.id, ".components-assets-___Asset__asset-container___ymU5H {\n  display: flex;\n  justify-content: flex-start;\n}\n\n.components-assets-___Asset__preview___3prKS {\n  margin-right: 25px;\n}\n\n.components-assets-___Asset__preview___3prKS a {\n  border-bottom: none;\n}\n\n.components-assets-___Asset__metadata___1F974 {\n  width: 60%;\n  overflow-wrap: break-word\n}\n\n.components-assets-___Asset__metadata___1F974 h1 {\n  margin-bottom: 20px;\n}\n", ""]);
@@ -59018,11 +59082,11 @@
 	exports.locals = {
 		"asset-container": "components-assets-___Asset__asset-container___ymU5H",
 		"preview": "components-assets-___Asset__preview___3prKS",
-		"metadata": "components-assets-___Asset__metadata___1F974 " + __webpack_require__(1005).locals["field"] + ""
+		"metadata": "components-assets-___Asset__metadata___1F974 " + __webpack_require__(1006).locals["field"] + ""
 	};
 
 /***/ },
-/* 1026 */
+/* 1027 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59042,10 +59106,19 @@
 	  var location = _ref.location;
 	
 	  var error = location.state.message ? _react2.default.createElement(
-	    'p',
+	    'div',
 	    null,
-	    'An error occurred: ',
-	    location.state.message
+	    _react2.default.createElement(
+	      'h2',
+	      null,
+	      'An error occurred:'
+	    ),
+	    ' ',
+	    _react2.default.createElement(
+	      'p',
+	      null,
+	      location.state.message
+	    )
 	  ) : _react2.default.createElement(
 	    'p',
 	    null,
