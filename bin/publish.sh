@@ -13,7 +13,15 @@ fi
 
 cp *.svg *.png *.css dist/*.js $PAGES_DIR
 
-sed -e "s/<base href='\/'/<base href='\/discovery-app-react\/'/g" index.html > $PAGES_DIR/index.html
+# Setup base path and analytics tag
+cat index.html | \
+  sed -e "s/<base href='\/'/<base href='\/discovery-app-react\/'/g" | \
+  sed -e 's/<!--ANALYTICS-->/{{{ANALYTICS}}}/g' > \
+  $PAGES_DIR/index.mustache
+
+./node_modules/.bin/mustache ./bin/analytics.json $PAGES_DIR/index.mustache > $PAGES_DIR/index.html
+rm -f $PAGES_DIR/index.mustache
+
 cp $PAGES_DIR/index.html $PAGES_DIR/404.html
 
 pushd $PAGES_DIR
