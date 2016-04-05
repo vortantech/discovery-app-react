@@ -8,8 +8,8 @@ function SettingsForm ({space, accessToken, preview, handleChange, loadSpace, lo
     <form onSubmit={loadSpace} styleName='settings-form'>
       <p><a href='https://contentful.com'>Contentful</a> is a content management platform for web applications, mobile apps and connected devices.</p>
       <p>It allows you to create, edit & manage content in the cloud and publish it anywhere via a powerful API.</p>
-      <p>The Contentful Discover web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
-      <p>You can get your Space ID and Access Token from the API section of the <a href='https://app.contentful.com'>Contentful web interface</a></p>
+      <p>The Contentful Discovery web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
+      <p>You can get your Space ID and Access Token from the API section of the <a href='https://app.contentful.com'>Contentful Web App</a></p>
       <div styleName='form-container'>
         <p>
           <label for='space' styleName='label-title'>Space ID</label>
