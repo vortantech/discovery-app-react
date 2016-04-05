@@ -53389,7 +53389,7 @@
 	    _react2.default.createElement(
 	      'p',
 	      null,
-	      'The Contentful Discover web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces'
+	      'The Contentful Discovery web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces'
 	    ),
 	    _react2.default.createElement(
 	      'p',
@@ -53398,7 +53398,7 @@
 	      _react2.default.createElement(
 	        'a',
 	        { href: 'https://app.contentful.com' },
-	        'Contentful web interface'
+	        'Contentful Web App'
 	      )
 	    ),
 	    _react2.default.createElement(
