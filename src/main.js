@@ -11,6 +11,7 @@ import Entry from './components/entries/Entry'
 import AssetsContainer from './components/assets/AssetsContainer'
 import AssetContainer from './components/assets/AssetContainer'
 import Error from './components/Error'
+import NoMatch from './components/NoMatch'
 import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
 let credentials = {
@@ -30,6 +31,7 @@ render((
       <Route path='assets' component={AssetsContainer} onEnter={requireCredentials}/>
       <Route path='assets/:assetId' component={AssetContainer} onEnter={requireCredentials}/>
       <Route path='error' component={Error}/>
+      <Route path="*" component={NoMatch}/>
     </Route>
   </Router>
 ), document.getElementsByTagName('main')[0])
