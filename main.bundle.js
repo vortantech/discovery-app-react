@@ -46531,7 +46531,7 @@
 	      _react2.default.createElement(
 	        'div',
 	        { styleName: 'nav-container' },
-	        _react2.default.createElement('img', { src: '/contentful.svg', width: '157', height: '32' }),
+	        _react2.default.createElement('img', { src: './contentful.svg', width: '157', height: '32' }),
 	        nav(props.location.query)
 	      )
 	    ),
@@ -53772,7 +53772,7 @@
 	  return _react2.default.createElement(
 	    'div',
 	    { styleName: 'placeholder' },
-	    _react2.default.createElement('img', { src: '/contentful_logo_120x90@2x.png' }),
+	    _react2.default.createElement('img', { src: './contentful_logo_120x90@2x.png' }),
 	    _react2.default.createElement(
 	      'p',
 	      null,
