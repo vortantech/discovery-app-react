@@ -88,6 +88,10 @@
 	
 	var _Error2 = _interopRequireDefault(_Error);
 	
+	var _NoMatch = __webpack_require__(1028);
+	
+	var _NoMatch2 = _interopRequireDefault(_NoMatch);
+	
 	var _isPreviewSetInQuery = __webpack_require__(963);
 	
 	var _isPreviewSetInQuery2 = _interopRequireDefault(_isPreviewSetInQuery);
@@ -115,7 +119,8 @@
 	    _react2.default.createElement(_reactRouter.Redirect, { from: 'entries', to: 'entries/by-content-type' }),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'assets', component: _AssetsContainer2.default, onEnter: requireCredentials }),
 	    _react2.default.createElement(_reactRouter.Route, { path: 'assets/:assetId', component: _AssetContainer2.default, onEnter: requireCredentials }),
-	    _react2.default.createElement(_reactRouter.Route, { path: 'error', component: _Error2.default })
+	    _react2.default.createElement(_reactRouter.Route, { path: 'error', component: _Error2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '*', component: _NoMatch2.default })
 	  )
 	), document.getElementsByTagName('main')[0]);
 	
@@ -59129,6 +59134,41 @@
 	    'div',
 	    null,
 	    error
+	  );
+	}
+
+/***/ },
+/* 1028 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = NoMatch;
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(166);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function NoMatch(_ref) {
+	  var location = _ref.location;
+	
+	  return _react2.default.createElement(
+	    'p',
+	    null,
+	    'Oops! You\'re looking for something that isn\'t here. You probably want to go back to the ',
+	    _react2.default.createElement(
+	      _reactRouter.Link,
+	      { to: { pathname: '/', query: location.query } },
+	      'main page'
+	    ),
+	    '.'
 	  );
 	}
 
