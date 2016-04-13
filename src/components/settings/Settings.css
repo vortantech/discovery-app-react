@@ -10,7 +10,7 @@
 }
 
 .settings-form > p,
-.form-container > div {
+.form-container > * {
   margin-bottom: 25px;
 }
 

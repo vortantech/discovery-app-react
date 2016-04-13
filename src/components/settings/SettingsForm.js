@@ -21,6 +21,7 @@ function SettingsForm ({
       <p>The Contentful Discovery web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
       <p>You can get your Space ID and Access Token from the API section of the <a href='https://app.contentful.com'>Contentful Web App</a></p>
       <div styleName='form-container'>
+        <p styleName='error' style={errorDisplay}>{validationError}</p>
         <div>
           <label for='space' styleName='label-title'>Space ID</label>
           <input id='space' type='text' value={space} onChange={handleChange}/>
@@ -32,7 +33,6 @@ function SettingsForm ({
             <option value='preview'>Preview API</option>
           </select>
           <input id='selectedAccessToken' type='text' value={selectedAccessToken} onChange={handleChange}/>
-          <p styleName='error' style={errorDisplay}>{validationError}</p>
         </div>
         <button type='submit'>Load Space</button>
       </div>
