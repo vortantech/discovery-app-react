@@ -84,6 +84,8 @@ export default createClass({
   render () {
     if (this.state.phase === 'loading') {
       return <p>Loading your Entries...</p>
+    } else if (this.state.entries.len() === 0) {
+      return <p>No entries are available.</p>
     } else {
       let contentElement, loadMoreElement
       const backNavLink = <Link to={{pathname: '/entries/by-content-type', query: this.props.location.query}}>&lt; Content Type List</Link>

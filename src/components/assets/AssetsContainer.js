@@ -23,6 +23,8 @@ export default createClass({
   render () {
     if (this.state.phase === 'loading') {
       return <p>Loading your Assets...</p>
+    } else if (this.state.assets.length === 0) {
+      return <p>No assets are available.</p>
     } else {
       return <Assets items={this.state.assets.items} location={this.props.location}/>
     }

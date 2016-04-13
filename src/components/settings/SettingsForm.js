@@ -3,7 +3,17 @@ import CSSModules from 'react-css-modules'
 import { Link } from 'react-router'
 import styles from './Settings.css'
 
-function SettingsForm ({space, accessToken, preview, handleChange, loadSpace, loadDemoSpace}) {
+function SettingsForm ({
+  space,
+  selectedAccessToken,
+  selectedApi,
+  handleChange,
+  loadSpace,
+  validationError
+}) {
+  const errorDisplay = {
+    display: validationError ? 'block' : 'none'
+  }
   return (
     <form onSubmit={loadSpace} styleName='settings-form'>
       <p><a href='https://contentful.com'>Contentful</a> is a content management platform for web applications, mobile apps and connected devices.</p>
@@ -11,20 +21,19 @@ function SettingsForm ({space, accessToken, preview, handleChange, loadSpace, lo
       <p>The Contentful Discovery web app gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
       <p>You can get your Space ID and Access Token from the API section of the <a href='https://app.contentful.com'>Contentful Web App</a></p>
       <div styleName='form-container'>
-        <p>
+        <div>
           <label for='space' styleName='label-title'>Space ID</label>
           <input id='space' type='text' value={space} onChange={handleChange}/>
-        </p>
-        <p>
-          <label for='accessToken' styleName='label-title'>Access Token</label>
-          <input id='accessToken' type='text' value={accessToken} onChange={handleChange}/>
-        </p>
-        <p>
-          <h3 styleName='label-title'>Preview API</h3>
-          <input id='preview' type='checkbox' checked={preview} styleName='checkbox' onChange={handleChange}/>
-          <label for='preview'>Check this if you want to use the <a href='https://www.contentful.com/developers/docs/concepts/apis/#content-preview-api'>Preview API</a>.</label>
-        </p>
-        <p>If you check the box above, make sure the Access Token is valid for use with the Preview API.</p>
+        </div>
+        <div>
+          <label for='selectedAccessToken' styleName='label-title'>Access Token</label>
+          <select id='api' value={selectedApi} onChange={handleChange}>
+            <option value='delivery'>Delivery API</option>
+            <option value='preview'>Preview API</option>
+          </select>
+          <input id='selectedAccessToken' type='text' value={selectedAccessToken} onChange={handleChange}/>
+          <p styleName='error' style={errorDisplay}>{validationError}</p>
+        </div>
         <button type='submit'>Load Space</button>
       </div>
       <p>Still don't have a Space?</p>
@@ -36,9 +45,11 @@ function SettingsForm ({space, accessToken, preview, handleChange, loadSpace, lo
 
 SettingsForm.propTypes = {
   space: PropTypes.string.isRequired,
-  accessToken: PropTypes.string.isRequired,
+  selectedAccessToken: PropTypes.string.isRequired,
+  selectedApi: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
-  loadSpace: PropTypes.func.isRequired
+  loadSpace: PropTypes.func.isRequired,
+  validationError: PropTypes.string
 }
 
 export default CSSModules(SettingsForm, styles)

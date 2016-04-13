@@ -10,15 +10,16 @@
 }
 
 .settings-form > p,
-.form-container > p {
+.form-container > div {
   margin-bottom: 25px;
 }
 
-.settings-form p {
+.settings-form div {
   text-align: center;
 }
 
 .settings-form input,
+.settings-form select,
 .settings-form button {
   font-size: 14px;
   padding: 0 10px;
@@ -26,11 +27,19 @@
   border-radius: 2px;
 }
 
-.settings-form input {
-  width: 350px;
+.settings-form input,
+.settings-form select {
   background-color: #F7F9FA;
   border: 1px solid #DBE3E7;
   color: #536171;
+}
+
+.settings-form input {
+  width: 350px;
+}
+
+.settings-form select {
+  margin-right: 10px;
 }
 
 .settings-form .label-title {
@@ -53,4 +62,8 @@ input.checkbox {
   line-height: 20px;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+.error {
+  color: red;
 }

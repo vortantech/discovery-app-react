@@ -31,7 +31,7 @@ render((
       <Route path='assets' component={AssetsContainer} onEnter={requireCredentials}/>
       <Route path='assets/:assetId' component={AssetContainer} onEnter={requireCredentials}/>
       <Route path='error' component={Error}/>
-      <Route path="*" component={NoMatch}/>
+      <Route path='*' component={NoMatch}/>
     </Route>
   </Router>
 ), document.getElementsByTagName('main')[0])
@@ -43,10 +43,11 @@ render((
  */
 function requireCredentials (nextState, replace, next) {
   const query = nextState.location.query
+  const isPreview = isPreviewSetInQuery(query)
   const newCredentials = {
-    accessToken: query.access_token,
+    accessToken: isPreview ? query.preview_access_token : query.access_token,
     space: query.space_id,
-    preview: isPreviewSetInQuery(query)
+    preview: isPreview
   }
   if (credentialsExist(newCredentials) && (!getClient() || credentialsAreDifferent(credentials, newCredentials))) {
     initializeClient(newCredentials, next, replace)
@@ -81,9 +82,6 @@ function initializeClient (newCredentials, next, replace) {
       next()
     },
     (err) => {
-      if (err.sys && err.sys.id === 'AccessTokenInvalid') {
-        err.message += 'If you are using a Preview API token make sure you check the Preview API box. Otherwise, make sure you are using a Delivery API token and the box is unchecked.'
-      }
       replace({
         pathname: '/error',
         state: {
