@@ -3,6 +3,8 @@ import CSSModules from 'react-css-modules'
 import { Link } from 'react-router'
 import styles from './Settings.css'
 
+const sourceCodeURL = 'https://github.com/contentful/discovery-app-react'
+
 function SettingsForm ({
   space,
   selectedAccessToken,
@@ -38,7 +40,7 @@ function SettingsForm ({
       </div>
       <p>Still don't have a Space?</p>
       <p><Link to='/entries/by-content-type?space_id=cfexampleapi&access_token=b4c0n73n7fu1'>Load a demo Space</Link> or <a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
-      <p>This application is Open Source. You can check out the <a href='https://github.com/contentful/contentful-discovery-react'>source code</a>, see how it was built, and suggest your own improvements.</p>
+      <p>This application is Open Source. You can check out the <a href={sourceCodeURL}>source code</a>, see how it was built, and suggest your own improvements.</p>
     </form>
   )
 }
