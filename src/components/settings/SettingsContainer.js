@@ -31,6 +31,7 @@ export default createClass({
     const query = {
       access_token: this.state.deliveryAccessToken,
       preview_access_token: this.state.previewAccessToken,
+      delivery_access_token: this.state.deliveryAccessToken,
       space_id: this.state.space
     }
     if (this.previewSelected()) {
@@ -82,6 +83,8 @@ export default createClass({
     return <SettingsForm
       space={this.state.space}
       selectedAccessToken={this.previewSelected() ? this.state.previewAccessToken : this.state.deliveryAccessToken}
+      deliveryAccessToken={this.state.deliveryAccessToken}
+      previewAccessToken={this.state.previewAccessToken}
       selectedApi={this.state.selectedApi}
       handleChange={this.handleChange}
       loadSpace={this.loadSpace}

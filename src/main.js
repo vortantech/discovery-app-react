@@ -14,6 +14,9 @@ import Error from './components/Error'
 import NoMatch from './components/NoMatch'
 import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
+// TODO: fix the history basename initialization, data can be passed via process.env
+// import createHashHistory from 'history/lib/createHashHistory'
+// const history = useRouterHistory(createHashHistory)({ queryKey: false })
 let credentials = {
   accessToken: '',
   space: ''
@@ -45,7 +48,9 @@ function requireCredentials (nextState, replace, next) {
   const query = nextState.location.query
   const isPreview = isPreviewSetInQuery(query)
   const newCredentials = {
-    accessToken: isPreview ? query.preview_access_token : query.access_token,
+    accessToken: isPreview ? query.preview_access_token : query.delivery_access_token,
+    previewAccessToken: query.preview_access_token,
+    deliveryAccessToken: query.delivery_access_token,
     space: query.space_id,
     preview: isPreview
   }

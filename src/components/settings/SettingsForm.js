@@ -8,6 +8,8 @@ const sourceCodeURL = 'https://github.com/contentful/discovery-app-react'
 function SettingsForm ({
   space,
   selectedAccessToken,
+  deliveryAccessToken,
+  previewAccessToken,
   selectedApi,
   handleChange,
   loadSpace,
@@ -17,8 +19,8 @@ function SettingsForm ({
     display: validationError ? 'block' : 'none'
   }
   return (
-    <div styleName="settings-container">
-      <h3 styleName="settings-title">WEB DISCOVERY APP</h3>
+    <div styleName='settings-container'>
+      <h3 styleName='settings-title'>WEB DISCOVERY APP</h3>
       <form onSubmit={loadSpace} styleName='settings-form'>
         <div styleName='form-container'>
           <p styleName='error' style={errorDisplay}>{validationError}</p>
@@ -31,24 +33,24 @@ function SettingsForm ({
             <input styleName='spaceInput' id='space' type='text' value={space} onChange={handleChange}/>
           </div>
           <div>
-            <label for='productionAccessToken' styleName='label-title'>Production API Key</label>
-            <input id='productionAccessToken' type='text' value='' onChange={handleChange}/>
+            <label for='deliveryAccessToken' styleName='label-title'>Delivery API Key</label>
+            <input id='deliveryAccessToken' type='text' value={deliveryAccessToken} onChange={handleChange}/>
           </div>
           <div>
-            <label for='previewAccessToken' styleName='label-title'>Preview Access Token</label>
-            <input id='previewAccessToken' type='text' value='' onChange={handleChange}/>
+            <label for='deliveryAccessToken' styleName='label-title'>Preview Access Token</label>
+            <input id='deliveryAccessToken' type='text' value={previewAccessToken} onChange={handleChange}/>
           </div>
           <button type='submit'>Load Space</button>
         </div>
       </form>
-      <div styleName="form-caption">
+      <div styleName='form-caption'>
         <section>
           <h4>What is Contentful Discovery Web App?</h4>
           <p>The Contentful Discovery Web App gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
         </section>
         <section>
           <h4>Still don't have a Space?</h4>
-          <p><Link to='/entries/by-content-type?space_id=cfexampleapi&access_token=b4c0n73n7fu1'>Load a demo Space</Link> or <a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
+          <p><Link to='/entries/by-content-type?space_id=cfexampleapi&access_token=b4c0n73n7fu1&preview_access_token=e5e8d4c5c122cf28fc1af3ff77d28bef78a3952957f15067bbc29f2f0dde0b50&delivery_access_token=b4c0n73n7fu1'>Load a demo Space</Link> or <a href='https://www.contentful.com/sign-up' target='_blank'>Create an account</a></p>
         </section>
         <section>
           <h4>What is Contentful</h4>
@@ -66,6 +68,8 @@ function SettingsForm ({
 SettingsForm.propTypes = {
   space: PropTypes.string.isRequired,
   selectedAccessToken: PropTypes.string.isRequired,
+  deliveryAccessToken: PropTypes.string.isRequired,
+  previewAccessToken: PropTypes.string.isRequired,
   selectedApi: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   loadSpace: PropTypes.func.isRequired,
