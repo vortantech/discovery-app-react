@@ -35,7 +35,7 @@ export default CSSModules(TwoPanelList, styles)
 
 export const Placeholder = CSSModules(({content}) => {
   return <div styleName='placeholder'>
-    <img src='./contentful_logo_120x90@2x.png' />
+    <img src='../../contentful_logo_120x90@2x.png' />
     <p>{content}</p>
   </div>
 }, styles)

@@ -1,6 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Redirect, browserHistory as history } from 'react-router'
+import { Router, Route, IndexRoute, Redirect, useRouterHistory } from 'react-router'
+
+import { createHistory } from 'history'
+
 import { initClient, getClient } from './services/contentfulClient'
 
 import App from './components/App'
@@ -14,9 +17,9 @@ import Error from './components/Error'
 import NoMatch from './components/NoMatch'
 import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
-// TODO: fix the history basename initialization, data can be passed via process.env
-// import createHashHistory from 'history/lib/createHashHistory'
-// const history = useRouterHistory(createHashHistory)({ queryKey: false })
+const history = useRouterHistory(createHistory)({
+  basename: process.env.BASE_PATH || '/'
+})
 let credentials = {
   accessToken: '',
   space: ''

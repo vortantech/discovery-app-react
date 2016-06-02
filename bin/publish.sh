@@ -15,7 +15,6 @@ cp *.svg *.png *.css dist/*.js $PAGES_DIR
 
 # Setup base path and analytics tag
 cat index.html | \
-  sed -e "s/<base href='\/'/<base href='\/discovery-app-react\/'/g" | \
   sed -e 's/<!--ANALYTICS-->/{{{ANALYTICS}}}/g' > \
   $PAGES_DIR/index.mustache
 
