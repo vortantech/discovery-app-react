@@ -2,20 +2,42 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
-
-.form-container {
-  margin: 35px 0px 65px;
+.settings-form{
+  background-color: white;
+  border: 1px solid #DBE3E7;
+  padding: 20px;
 }
-
+.settings-container{
+  width: 720px;
+  margin: 0 auto;
+}
+.settings-title{
+  text-align: center;
+  font-weight: normal;
+  color: #2A3038;
+  margin-bottom: 30px;
+}
+.form-caption{
+  margin-top: 30px;
+}
+.form-caption h4{
+  color:#95A3B3;
+}
+.form-caption section{
+  padding: 10px;
+  color: #BBC8CD;
+}
 .settings-form > p,
 .form-container > * {
   margin-bottom: 25px;
 }
-
+.form-container {
+  margin: 35px 0px 65px;
+}
 .settings-form div {
-  text-align: center;
+  text-align: left;
 }
 
 .settings-form input,
@@ -26,7 +48,9 @@
   height: 38px;
   border-radius: 2px;
 }
-
+.settings-form select{
+  display: none;
+}
 .settings-form input,
 .settings-form select {
   background-color: #F7F9FA;
@@ -35,9 +59,12 @@
 }
 
 .settings-form input {
+  width: 550px;
+  padding: 10px;
+}
+.settings-form .spaceInput{
   width: 350px;
 }
-
 .settings-form select {
   margin-right: 10px;
 }
