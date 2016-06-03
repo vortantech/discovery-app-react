@@ -1,0 +1,23 @@
+import React from 'react'
+import styles from './ToggleButton.css'
+import CSSModules from 'react-css-modules'
+class ToggleButton extends React.Component {
+  componentWillMount () {
+    this.state = {isChecked: true}
+    this.onChange = this.onChange.bind(this)
+  }
+  onChange (e) {
+    this.setState({
+      isChecked: !this.state.isChecked // flip boolean value
+    })
+  }
+  render () {
+    return (
+      <div styleName='onoffswitch'>
+        <input type='checkbox' name='onoffswitch' styleName='onoffswitch-checkbox' id='myonoffswitch' checked={this.state.isChacked} onChange={this.onChange}/>
+        <label styleName='onoffswitch-label' htmlFor='myonoffswitch'></label>
+      </div>
+    )
+  }
+}
+export default CSSModules(ToggleButton, styles)
