@@ -17,7 +17,9 @@
 .app-container nav {
   background: #192532;
 }
-
+.app-container nav ul li.selected{
+  color: white;
+}
 .nav-container {
   composes: centered-container;
   display: flex;
