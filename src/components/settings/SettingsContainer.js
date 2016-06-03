@@ -11,7 +11,7 @@ export default createClass({
   getInitialState () {
     return {
       space: this.props.location.query.space_id || '',
-      deliveryAccessToken: this.props.location.query.access_token || '',
+      deliveryAccessToken: this.props.location.query.delivery_access_token || '',
       previewAccessToken: this.props.location.query.preview_access_token || '',
       selectedApi: isPreviewSetInQuery(this.props.location.query) ? 'preview' : 'delivery',
       validationError: null
@@ -32,6 +32,7 @@ export default createClass({
       access_token: this.state.deliveryAccessToken,
       preview_access_token: this.state.previewAccessToken,
       delivery_access_token: this.state.deliveryAccessToken,
+      preview: true,
       space_id: this.state.space
     }
     if (this.previewSelected()) {
