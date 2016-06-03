@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react'
 import styles from './ToggleButton.css'
 import CSSModules from 'react-css-modules'
+import {changeTokenType} from '../actions/actions.js'
 class ToggleButton extends React.Component {
   componentWillMount () {
     this.state = {isChecked: true}
@@ -11,6 +12,7 @@ class ToggleButton extends React.Component {
       isChecked: !this.state.isChecked // flip boolean value
     })
     this.props.changeHandler(!this.state.isChecked)
+    changeTokenType(!this.state.isChecked)
   }
   render () {
     return (

@@ -2,7 +2,7 @@ import React, {createClass, PropTypes} from 'react'
 import SettingsForm from './SettingsForm'
 import {resetClient} from '../../services/contentfulClient'
 import isPreviewSetInQuery from '../../utils/is-preview-set-in-query'
-
+import TokenStore from '../../stores/DiscoveryStore'
 export default createClass({
   contextTypes: {
     router: PropTypes.object.isRequired
@@ -18,6 +18,14 @@ export default createClass({
     }
   },
 
+  componentWillMount () {
+    TokenStore.addListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
+  },
+
+  componentWillUnmount () {
+    TokenStore.removeListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
+  },
+
   loadSpace (event) {
     event.preventDefault()
     if (!this.state.space) {
@@ -29,21 +37,24 @@ export default createClass({
     }
     resetClient()
     const query = {
-      access_token: this.state.deliveryAccessToken,
       preview_access_token: this.state.previewAccessToken,
       delivery_access_token: this.state.deliveryAccessToken,
-      preview: true,
+      preview: TokenStore.get('isPreview'),
       space_id: this.state.space
     }
     if (this.previewSelected()) {
       query.preview = true
     }
+    console.log(query.preview)
     this.context.router.push({
       pathname: '/entries/by-content-type',
       query: query
     })
   },
-
+  handleApiSelectionChange (event) {
+    console.log(TokenStore.data)
+    this.setState({ selectedApi: TokenStore.get('isPreview') ? 'preview' : 'production', validationError: null })
+  },
   handleChange (event) {
     switch (event.target.id) {
       case 'space':
@@ -51,9 +62,6 @@ export default createClass({
         break
       case 'selectedAccessToken':
         this.handleAccessTokenChange(event.target.value)
-        break
-      case 'api':
-        this.setState({ selectedApi: event.target.value, validationError: null })
         break
     }
   },
