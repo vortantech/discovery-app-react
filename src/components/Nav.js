@@ -4,6 +4,7 @@ import ToggleButton from './ToggleButton'
 import {getClient} from '../services/contentfulClient'
 import styles from './Nav.css'
 import CSSModules from 'react-css-modules'
+
 class Nav extends React.Component {
   constructor () {
     super()
