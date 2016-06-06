@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react'
 import styles from './ToggleButton.css'
 import CSSModules from 'react-css-modules'
-import {changeTokenType} from '../actions/actions.js'
 import getID from '../utils/getID'
 
 class ToggleButton extends React.Component {
@@ -15,9 +14,7 @@ class ToggleButton extends React.Component {
     this.setState({
       isChecked: nextVal
     })
-    // we need to inverse the nextVal because checked means isPreview === false
-    this.props.changeHandler(!nextVal)
-    changeTokenType(!nextVal)
+    this.props.changeHandler(nextVal)
   }
   render () {
     return (
