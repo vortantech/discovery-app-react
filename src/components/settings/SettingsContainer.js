@@ -1,30 +1,28 @@
-import React, {createClass, PropTypes} from 'react'
+import React, {PropTypes} from 'react'
 import SettingsForm from './SettingsForm'
 import {resetClient} from '../../services/contentfulClient'
 import isPreviewSetInQuery from '../../utils/is-preview-set-in-query'
 import TokenStore from '../../stores/DiscoveryStore'
-export default createClass({
-  contextTypes: {
-    router: PropTypes.object.isRequired
-  },
 
-  getInitialState () {
-    return {
+export default class SettingsContainer extends React.Component {
+  constructor (props) {
+    super(props)
+    this.handleApiSelectionChange = this.handleApiSelectionChange.bind(this)
+    this.state = {
       space: this.props.location.query.space_id || '',
       deliveryAccessToken: this.props.location.query.delivery_access_token || '',
       previewAccessToken: this.props.location.query.preview_access_token || '',
       selectedApi: isPreviewSetInQuery(this.props.location.query) ? 'preview' : 'delivery',
       validationError: null
     }
-  },
-
+  }
   componentWillMount () {
     TokenStore.addListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
-  },
+  }
 
   componentWillUnmount () {
     TokenStore.removeListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
-  },
+  }
 
   loadSpace (event) {
     event.preventDefault()
@@ -50,11 +48,12 @@ export default createClass({
       pathname: '/entries/by-content-type',
       query: query
     })
-  },
+  }
+
   handleApiSelectionChange (event) {
-    console.log(TokenStore.data)
     this.setState({ selectedApi: TokenStore.get('isPreview') ? 'preview' : 'production', validationError: null })
-  },
+  }
+
   handleChange (event) {
     switch (event.target.id) {
       case 'space':
@@ -64,11 +63,11 @@ export default createClass({
         this.handleAccessTokenChange(event.target.value)
         break
     }
-  },
+  }
 
   showError (message) {
     this.setState({ validationError: message })
-  },
+  }
 
   handleAccessTokenChange (accessToken) {
     if (this.previewSelected()) {
@@ -82,11 +81,11 @@ export default createClass({
         validationError: null
       })
     }
-  },
+  }
 
   previewSelected () {
     return this.state.selectedApi === 'preview'
-  },
+  }
 
   render () {
     return <SettingsForm
@@ -96,8 +95,11 @@ export default createClass({
       previewAccessToken={this.state.previewAccessToken}
       selectedApi={this.state.selectedApi}
       handleChange={this.handleChange}
-      loadSpace={this.loadSpace}
+      loadSpace={this.loadSpace.bind(this)}
       validationError={this.state.validationError}
       />
   }
-})
+}
+SettingsContainer.contextTypes = {
+  router: PropTypes.object.isRequired
+}
