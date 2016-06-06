@@ -4,31 +4,38 @@ import ToggleButton from './ToggleButton'
 import {getClient} from '../services/contentfulClient'
 import styles from './Nav.css'
 import CSSModules from 'react-css-modules'
+import {changeTokenType} from '../actions/actions.js'
+
+const PRODUCTION = 'production'
+const PREVIEW = 'preview'
 class Nav extends React.Component {
   constructor () {
     super()
     this.state = {currentTokenType: 'preview'}
   }
-  handleChange (isPreview) {
-    this.setState({currentTokenType: isPreview ? 'preview' : 'production'})
+  handleChange (isProduction) {
+    this.setState({currentTokenType: isProduction ? PRODUCTION : PREVIEW})
+    changeTokenType(!isProduction)
   }
-  getNav () {
-    if (getClient()) {
-      return (
-        <ul>
-          <li styleName={this.state.currentTokenType === 'preview' ? 'selected' : ''}>Preview</li>
-          <li><ToggleButton changeHandler={this.handleChange.bind(this)}/></li>
-          <li styleName={this.state.currentTokenType === 'production' ? 'selected' : ''}>Production</li>
-          <li><Link to={{pathname: '/entries', query: this.props.query}}>Entries</Link></li>
-          <li><Link to={{pathname: '/assets', query: this.props.query}}>Assets</Link></li>
-          <li><Link to={{pathname: '/', query: this.props.query}}>Settings</Link></li>
-        </ul>
-      )
+  selectedWhenIn (mode) {
+    if (mode === this.state.currentTokenType) {
+      return 'selected'
     }
-    return null
+    return ''
   }
   render () {
-    return this.getNav()
+    if (!getClient()) { return null }
+    const q = this.props.query
+    return (
+      <ul>
+        <li styleName={this.selectedWhenIn(PREVIEW)}>Preview</li>
+        <li><ToggleButton changeHandler={this.handleChange.bind(this)}/></li>
+        <li styleName={this.selectedWhenIn(PRODUCTION)}>Production</li>
+        <li><Link to={{pathname: '/entries', query: q}}>Entries</Link></li>
+        <li><Link to={{pathname: '/assets', query: q}}>Assets</Link></li>
+        <li><Link to={{pathname: '/', query: q}}>Settings</Link></li>
+      </ul>
+      )
   }
 }
 Nav.propTypes = {

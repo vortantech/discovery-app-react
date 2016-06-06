@@ -2,26 +2,27 @@ import React, {PropTypes} from 'react'
 import SettingsForm from './SettingsForm'
 import {resetClient} from '../../services/contentfulClient'
 import isPreviewSetInQuery from '../../utils/is-preview-set-in-query'
-import TokenStore from '../../stores/DiscoveryStore'
+import ApiStore from '../../stores/ApiStore'
 
 export default class SettingsContainer extends React.Component {
   constructor (props) {
     super(props)
     this.handleApiSelectionChange = this.handleApiSelectionChange.bind(this)
+    let q = this.props.location.query
     this.state = {
-      space: this.props.location.query.space_id || '',
-      deliveryAccessToken: this.props.location.query.delivery_access_token || '',
-      previewAccessToken: this.props.location.query.preview_access_token || '',
-      selectedApi: isPreviewSetInQuery(this.props.location.query) ? 'preview' : 'delivery',
+      space: q.space_id || '',
+      deliveryAccessToken: q.delivery_access_token || '',
+      previewAccessToken: q.preview_access_token || '',
+      selectedApi: isPreviewSetInQuery(q) ? 'preview' : 'delivery',
       validationError: null
     }
   }
   componentWillMount () {
-    TokenStore.addListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
+    ApiStore.addListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
   }
 
   componentWillUnmount () {
-    TokenStore.removeListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
+    ApiStore.removeListener('API_SELECTION_CHANGE', this.handleApiSelectionChange)
   }
 
   loadSpace (event) {
@@ -34,10 +35,11 @@ export default class SettingsContainer extends React.Component {
       return this.showError('You need to provide a Delivery API Access Token if you want to use the Delivery API')
     }
     resetClient()
+    console.log('ApiStore.get(\'isPreview\')', ApiStore.get('isPreview'))
     const query = {
       preview_access_token: this.state.previewAccessToken,
       delivery_access_token: this.state.deliveryAccessToken,
-      preview: TokenStore.get('isPreview'),
+      preview: ApiStore.get('isPreview'),
       space_id: this.state.space
     }
     if (this.previewSelected()) {
@@ -50,7 +52,10 @@ export default class SettingsContainer extends React.Component {
   }
 
   handleApiSelectionChange (event) {
-    this.setState({ selectedApi: TokenStore.get('isPreview') ? 'preview' : 'production', validationError: null })
+    this.setState({
+      selectedApi: ApiStore.get('isPreview') ? 'preview' : 'production',
+      validationError: null
+    })
   }
 
   handleChange (event) {
@@ -83,7 +88,7 @@ export default class SettingsContainer extends React.Component {
   }
 
   previewSelected () {
-    return this.state.selectedApi === 'preview'
+    return ApiStore.get('isPreview')
   }
 
   render () {

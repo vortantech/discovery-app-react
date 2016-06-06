@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import Dispatcher from '../dispatchers/Dispatcher'
-class DiscoveryStore extends EventEmitter {
+class ApiStore extends EventEmitter {
   constructor () {
     super()
     this.data = this.getInitialState()
@@ -11,8 +11,8 @@ class DiscoveryStore extends EventEmitter {
       isPreview: true
     }
   }
-  set (key, data) {
-    this.data[key] = data
+  set (key, value) {
+    this.data[key] = value
   }
   get (key) {
     return this.data[key]
@@ -25,6 +25,6 @@ class DiscoveryStore extends EventEmitter {
     this.emit('API_SELECTION_CHANGE')
   }
 }
-const discoveryStore = new DiscoveryStore()
-Dispatcher.register(discoveryStore.handleActions.bind(discoveryStore))
-export default discoveryStore
+const apiStore = new ApiStore()
+Dispatcher.register(apiStore.handleActions.bind(apiStore))
+export default apiStore
