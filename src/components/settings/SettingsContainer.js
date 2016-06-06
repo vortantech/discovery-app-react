@@ -43,7 +43,6 @@ export default class SettingsContainer extends React.Component {
     if (this.previewSelected()) {
       query.preview = true
     }
-    console.log(query.preview)
     this.context.router.push({
       pathname: '/entries/by-content-type',
       query: query
