@@ -11,7 +11,7 @@ class ToggleButton extends React.Component {
     this.toggleId = getID()
   }
   onChange (e) {
-    let nextVal = !this.state.isChecked // flip boolean value
+    let nextVal = !this.state.isChecked
     this.setState({
       isChecked: nextVal
     })
