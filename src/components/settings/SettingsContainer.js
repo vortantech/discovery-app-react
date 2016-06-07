@@ -10,7 +10,7 @@ export default class SettingsContainer extends React.Component {
     this.handleApiSelectionChange = this.handleApiSelectionChange.bind(this)
     let q = this.props.location.query
     this.state = {
-      space: this.props.location.query.space_id || '',
+      space: q.space_id || '',
       deliveryAccessToken: q.delivery_access_token || '',
       previewAccessToken: q.preview_access_token || '',
       selectedApi: isPreviewSetInQuery(q) ? 'preview' : 'delivery',
