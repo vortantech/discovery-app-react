@@ -17,25 +17,25 @@ class Nav extends React.Component {
     this.setState({currentTokenType: isProduction ? PRODUCTION : PREVIEW})
     changeTokenType(!isProduction)
   }
-  getNav () {
-    if (getClient()) {
-      let previewStyleName = this.state.currentTokenType === PREVIEW ? 'selected' : ''
-      let productionStyleName = this.state.currentTokenType === PRODUCTION ? 'selected' : ''
-      return (
-        <ul>
-          <li styleName={previewStyleName}>Preview</li>
-          <li><ToggleButton changeHandler={this.handleChange.bind(this)}/></li>
-          <li styleName={productionStyleName}>Production</li>
-          <li><Link to={{pathname: '/entries', query: this.props.query}}>Entries</Link></li>
-          <li><Link to={{pathname: '/assets', query: this.props.query}}>Assets</Link></li>
-          <li><Link to={{pathname: '/', query: this.props.query}}>Settings</Link></li>
-        </ul>
-      )
+  selectedWhenIn (mode) {
+    if (mode === this.state.currentTokenType) {
+      return 'selected'
     }
-    return null
+    return ''
   }
   render () {
-    return this.getNav()
+    if (!getClient()) { return null }
+    const q = this.props.query
+    return (
+      <ul>
+        <li styleName={this.selectedWhenIn(PREVIEW)}>Preview</li>
+        <li><ToggleButton changeHandler={this.handleChange.bind(this)}/></li>
+        <li styleName={this.selectedWhenIn(PRODUCTION)}>Production</li>
+        <li><Link to={{pathname: '/entries', query: q}}>Entries</Link></li>
+        <li><Link to={{pathname: '/assets', query: q}}>Assets</Link></li>
+        <li><Link to={{pathname: '/', query: q}}>Settings</Link></li>
+      </ul>
+      )
   }
 }
 Nav.propTypes = {
