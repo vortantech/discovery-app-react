@@ -20,7 +20,7 @@ function SettingsForm ({
   }
   return (
     <div styleName='settings-container'>
-      <h3 styleName='settings-title'>WEB DISCOVERY APP</h3>
+      <h3 styleName='settings-title'>Discovery App</h3>
       <form onSubmit={loadSpace} styleName='settings-form'>
         <div styleName='form-container'>
           <p styleName='error' style={errorDisplay}>{validationError}</p>
@@ -33,11 +33,11 @@ function SettingsForm ({
             <input styleName='spaceInput' id='space' type='text' value={space} onChange={handleChange}/>
           </div>
           <div>
-            <label for='deliveryAccessToken' styleName='label-title'>Delivery API Key</label>
+            <label for='deliveryAccessToken' styleName='label-title'>Production API key</label>
             <input id='deliveryAccessToken' type='text' value={deliveryAccessToken} onChange={handleChange}/>
           </div>
           <div>
-            <label for='deliveryAccessToken' styleName='label-title'>Preview Access Token</label>
+            <label for='deliveryAccessToken' styleName='label-title'>Preview API key</label>
             <input id='deliveryAccessToken' type='text' value={previewAccessToken} onChange={handleChange}/>
           </div>
           <button type='submit'>Load Space</button>
@@ -45,8 +45,8 @@ function SettingsForm ({
       </form>
       <div styleName='form-caption'>
         <section>
-          <h4>What is The Contentful Discovery Web App?</h4>
-          <p>The Contentful Discovery Web App gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
+          <h4>What is The Contentful Discovery App?</h4>
+          <p>The Contentful Discovery App gives you a quick and easy way to preview your content on a web environment, and explore the contents of your Spaces</p>
         </section>
         <section>
           <h4>Still don't have a Space?</h4>
