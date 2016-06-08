@@ -20,7 +20,7 @@ function SettingsForm ({
   }
   return (
     <div styleName='settings-container'>
-      <h3 styleName='settings-title'>Discovery Web App</h3>
+      <h3 styleName='settings-title'>Discovery App</h3>
       <form onSubmit={loadSpace} styleName='settings-form'>
         <div styleName='form-container'>
           <p styleName='error' style={errorDisplay}>{validationError}</p>
