@@ -1,6 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Router, Route, IndexRoute, Redirect, browserHistory as history } from 'react-router'
+import { Router, Route, IndexRoute, Redirect, useRouterHistory } from 'react-router'
+
+import { createHistory } from 'history'
+
 import { initClient, getClient } from './services/contentfulClient'
 
 import App from './components/App'
@@ -14,6 +17,9 @@ import Error from './components/Error'
 import NoMatch from './components/NoMatch'
 import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
+const history = useRouterHistory(createHistory)({
+  basename: process.env.BASE_PATH || '/'
+})
 let credentials = {
   accessToken: '',
   space: ''
@@ -45,7 +51,9 @@ function requireCredentials (nextState, replace, next) {
   const query = nextState.location.query
   const isPreview = isPreviewSetInQuery(query)
   const newCredentials = {
-    accessToken: isPreview ? query.preview_access_token : query.access_token,
+    accessToken: isPreview ? query.preview_access_token : query.delivery_access_token,
+    previewAccessToken: query.preview_access_token,
+    deliveryAccessToken: query.delivery_access_token,
     space: query.space_id,
     preview: isPreview
   }
