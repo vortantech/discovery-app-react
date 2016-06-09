@@ -53,3 +53,10 @@
   padding-top: 40px;
   composes: centered-container;
 }
+.logo span{
+  display: block;
+  height: 32px;
+  float: right;
+  margin-top: 5px;
+  color: white;
+}
