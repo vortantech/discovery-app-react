@@ -1,10 +1,11 @@
 .asset-container {
   display: flex;
   justify-content: flex-start;
+  flex-direction: column;
 }
 
 .preview {
-  margin-right: 25px;
+  margin: 50px auto;
 }
 
 .preview a {
@@ -12,11 +13,31 @@
 }
 
 .metadata {
-  width: 60%;
-  overflow-wrap: break-word;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid #DBE3E7;
+  border-bottom: 1px solid #DBE3E7;
+  display: flex;
+  padding: 40px 20px;
+  justify-content: flex-start;
   composes: field from '../entries/Field.css'
 }
-
+.metadata section {
+  overflow-wrap: break-word;
+  width: 50%;
+  padding:20px;
+}
+.metadata section div {
+  margin-top: 25px;
+}
+.metadata h3{
+  color: #95A3B3;
+  font-weight: lighter;
+  text-transform:uppercase;
+}
+.left{
+  border-right: 1px solid #CAD5DA;
+}
 .metadata h1 {
   margin-bottom: 20px;
 }
