@@ -1,7 +1,10 @@
 .list {
   width: 250px;
-  height: 100%;
-  border: 1px solid #CAD5DA;
+  /* Height fallback for older browsers. */
+  height: 90%;
+  height: 90vh;
+  margin-top: 40px;
+  border-left: 1px solid #CAD5DA;
 }
 
 .list-container {
