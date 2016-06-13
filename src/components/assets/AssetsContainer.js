@@ -6,6 +6,7 @@ import styles from './AssetsContainer.css'
 import CSSModules from 'react-css-modules'
 import update from 'react-addons-update'
 const AssetsContainer = createClass({
+
   getInitialState () {
     return {
       assets: {},
