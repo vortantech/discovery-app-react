@@ -2,10 +2,6 @@ import React, {PropTypes} from 'react'
 import CSSModules from 'react-css-modules'
 import styles from './List.css'
 
-const listContainerStyle = {
-  height: (window.innerHeight - 200) + 'px'
-}
-
 class List extends React.Component {
   componentWillMout () {
   }
@@ -13,7 +9,7 @@ class List extends React.Component {
     return (
       <div styleName='list'>
         {this.props.TitleView}
-        <div styleName='list-container' style={listContainerStyle}>
+        <div styleName='list-container'>
           <ul>{this.props.list}</ul>
           {this.props.ListActionView}
         </div>

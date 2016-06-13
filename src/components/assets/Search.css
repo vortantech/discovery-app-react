@@ -1,0 +1,16 @@
+.search-container{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding: 20px;
+  color: #AABAC1;
+}
+.search{
+  border:1px solid #d0d0d0;
+  width: 50%;
+  height: 40px;
+  font-size: 1.2em;
+  margin-left: 35px;
+  padding: 10px 10px 10px 20px;
+  background: url('../../../search.png') no-repeat 8px 10px;
+}

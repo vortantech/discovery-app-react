@@ -1,11 +1,14 @@
 .two-panel-list {
   display: flex;
+  border-left: 1px solid #CAD5DA;
 }
 .list-item-contents {
-  margin-left: 50px;
+  padding:40px 0 0 50px;
   width: 750px;
   min-height: 300px;
   position: relative;
+  border-left: 1px solid #CAD5DA;
+  background-color: white;
 }
 
 .placeholder {

@@ -1,7 +1,9 @@
 .list {
   width: 250px;
-  height: 100%;
-  border: 1px solid #CAD5DA;
+  height: 90%;
+  height: 90vh;
+  margin-top: 40px;
+  border-left: 1px solid #CAD5DA;
 }
 
 .list-container {
@@ -26,6 +28,10 @@
   padding: 7px 5px;
   margin: 0;
   list-style: none;
+}
+.current{
+  background-color: #DEE4E9;
+  cursor:default;
 }
 .list li:hover {
   background-color: #DEE4E9;

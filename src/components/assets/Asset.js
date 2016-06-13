@@ -9,23 +9,42 @@ function Asset ({asset}) {
   return <div styleName='asset-container'>
     <div styleName='preview'>
       <a href={`${asset.fields.file.url}`} target='_blank'>
-        <Thumbnail url={asset.fields.file.url} fileName={asset.fields.file.fileName} size='320' />
+        <Thumbnail url={asset.fields.file.url} fileName={asset.fields.file.fileName} size='500' />
       </a>
     </div>
     <div styleName='metadata'>
-      <h1>{asset.fields.title}</h1>
-      <h2>Description</h2>
-      <p>{asset.fields.description}</p>
-      <h2>Creation Date</h2>
-      <p>{formatDate(asset.sys.createdAt)}</p>
-      <h2>File Name</h2>
-      <p>{asset.fields.file.fileName}</p>
-      <h2>URL</h2>
-      <p><a href={`${asset.fields.file.url}`} target='_blank'>http:{asset.fields.file.url}</a></p>
-      <h2>MIME Type</h2>
-      <p>{asset.fields.file.contentType}</p>
-      <h2>Size</h2>
-      <p>{prettyBytes(asset.fields.file.details.size)}</p>
+      <section styleName='left'>
+        <div>
+          <h3>Title</h3>
+          <h2>{asset.fields.title}</h2>
+        </div>
+        <div>
+          <h3>Description</h3>
+          <p>{asset.fields.description || 'No description provided.'}</p>
+        </div>
+        <div>
+          <h3>Creation Date</h3>
+          <p>{formatDate(asset.sys.createdAt)}</p>
+        </div>
+      </section>
+      <section>
+        <div>
+          <h3>File Name</h3>
+          <p>{asset.fields.file.fileName}</p>
+        </div>
+        <div>
+          <h3>URL</h3>
+          <p><a href={`${asset.fields.file.url}`} target='_blank'>https:{asset.fields.file.url}</a></p>
+        </div>
+        <div>
+          <h3>MIME Type</h3>
+          <p>{asset.fields.file.contentType}</p>
+        </div>
+        <div>
+          <h3>Size</h3>
+          <p>{prettyBytes(asset.fields.file.details.size)}</p>
+        </div>
+      </section>
     </div>
   </div>
 }
