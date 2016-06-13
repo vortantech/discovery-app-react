@@ -1,6 +1,5 @@
 .list {
   width: 250px;
-  /* Height fallback for older browsers. */
   height: 90%;
   height: 90vh;
   margin-top: 40px;
