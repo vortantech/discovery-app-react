@@ -5,7 +5,7 @@ import Search from './Search'
 import styles from './AssetsContainer.css'
 import CSSModules from 'react-css-modules'
 import update from 'react-addons-update'
-const AssetsContainer =  createClass({
+const AssetsContainer = createClass({
   getInitialState () {
     return {
       assets: {},
@@ -23,18 +23,18 @@ const AssetsContainer =  createClass({
       })
     })
   },
-  onChangeHandler (filter){
+  onChangeHandler (filter) {
     filter = filter.trim().toLowerCase()
-    const newItems = this.initialAssets.items.filter((asset)=>{
+    const newItems = this.initialAssets.items.filter((asset) => {
       return asset.fields.title.trim().toLowerCase().match(filter)
     })
     const newState = update(this.state, {
-     assets : {
-       items : {
-         $set:newItems
-       }
-     }
-    });
+      assets: {
+        items: {
+          $set: newItems
+        }
+      }
+    })
     this.setState(newState)
   },
   render () {
@@ -44,9 +44,9 @@ const AssetsContainer =  createClass({
       return <div styleName='assets'><p>No assets are available.</p></div>
     }
     return <div styleName='assets'>
-            <Search itemCount={this.state.assets.items.length} label='media assets' onChange={this.onChangeHandler}/>
-            <Assets items={this.state.assets.items} location={this.props.location}/>
-          </div>
+      <Search itemCount={this.state.assets.items.length} label='media assets' onChange={this.onChangeHandler}/>
+      <Assets items={this.state.assets.items} location={this.props.location}/>
+    </div>
   }
 })
 export default CSSModules(AssetsContainer, styles)

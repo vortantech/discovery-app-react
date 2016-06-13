@@ -29,6 +29,10 @@
   margin: 0;
   list-style: none;
 }
+.current{
+  background-color: #DEE4E9;
+  cursor:default;
+}
 .list li:hover {
   background-color: #DEE4E9;
   cursor: pointer;

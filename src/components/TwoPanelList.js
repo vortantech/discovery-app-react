@@ -17,9 +17,6 @@ function TwoPanelList ({items, ContentView, location}) {
       list={list}
       ListActionView={topItem.ListActionView} />
   })
-  function handleChange () {
-    console.log('searching')
-  }
   return (
     <div styleName='two-panel-list'>
       {lists}
