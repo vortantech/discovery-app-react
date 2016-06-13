@@ -17,6 +17,9 @@ function Entry ({entry, location}) {
   })
   return (
     <div>
+      <section styleName='edit-section'>
+        <a styleName='edit-link' href={'https://app.contentful.com/spaces/' + location.query.space_id + '/entries/' + location.pathname.split('/')[3]}> Edit in Contentful Web App</a>
+      </section>
       <Field key={displayField.id} definition={displayField} content={entry.fields[displayField.id]} styleName='field' location={location}/>
       {remainingFields}
     </div>

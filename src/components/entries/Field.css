@@ -50,3 +50,13 @@
 .symbol-item:last-child > p:after {
   content: ''
 }
+.edit-section{
+  width: 120%;
+  height: 50px;
+  padding: 10px;
+  background-color: #F7F9FA;
+  margin: -40px 0px 50px -50px;
+}
+.edit-link{
+  /*TODO: Add edit icon here*/
+}
