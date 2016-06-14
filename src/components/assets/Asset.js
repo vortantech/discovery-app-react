@@ -34,7 +34,7 @@ function Asset ({asset}) {
         </div>
         <div>
           <h3>URL</h3>
-          <p><a href={`${asset.fields.file.url}`} target='_blank'>http:{asset.fields.file.url}</a></p>
+          <p><a href={`${asset.fields.file.url}`} target='_blank'>https:{asset.fields.file.url}</a></p>
         </div>
         <div>
           <h3>MIME Type</h3>
