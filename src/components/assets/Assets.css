@@ -1,11 +1,8 @@
 .asset-list {
   display: flex;
   flex-wrap: wrap;
-<<<<<<< HEAD
   margin-top: 50px;
-=======
   padding: 20px;
->>>>>>> dd75038face9bdd15789a22c5b95859df782ee09
 }
 
 .asset-item {
