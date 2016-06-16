@@ -18,7 +18,7 @@ import NoMatch from './components/NoMatch'
 import isPreviewSetInQuery from './utils/is-preview-set-in-query'
 
 const history = useRouterHistory(createHistory)({
-  basename: (process.env.NODE_ENV && process.env.NODE_ENV === 'production') ? './discovery-app-react' : '/'
+  basename: (process.env.NODE_ENV && process.env.NODE_ENV === 'production') ? './' : '/'
 })
 let credentials = {
   accessToken: '',
