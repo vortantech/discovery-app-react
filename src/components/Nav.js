@@ -21,7 +21,7 @@ class Nav extends React.Component {
     if (mode === this.state.currentTokenType) {
       return 'selected'
     }
-    return ''
+    return 'idle'
   }
   render () {
     if (!getClient()) { return null }
