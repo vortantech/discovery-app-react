@@ -36,6 +36,7 @@
     "react-css-modules": "^3.7.5",
     "react-dom": "^15.0.0-rc.1",
     "react-router": "^2.0.0",
+    "history": "^2.0.1",
     "scourjs": "^1.0.1",
     "unique-concat": "^0.2.2"
   },
