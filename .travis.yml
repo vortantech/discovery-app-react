@@ -16,4 +16,4 @@ deploy:
   local_dir: discovery_app
   skip_cleanup: true
   on:
-    branch: redux
+    branch: master
