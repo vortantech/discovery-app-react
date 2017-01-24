@@ -6,13 +6,14 @@ import styles from './AssetsContainer.css'
 import CSSModules from 'react-css-modules'
 import update from 'react-addons-update'
 
-class AssetsContainer extends React.Component{
-	constructor () {
-		super()
-		this.state =  {
-		    assets: {},
-			  phase: 'loading'
-		 }
+class AssetsContainer extends React.Component {
+  constructor () {
+    super()
+    this.onChangeHandler = this.onChangeHandler.bind(this)
+    this.state = {
+      assets: {},
+      phase: 'loading'
+    }
   }
 
   componentDidMount () {
@@ -44,16 +45,12 @@ class AssetsContainer extends React.Component{
   render () {
     if (this.state.phase === 'loading') {
       return <div>
-               <p>
-                 Loading your Assets...
-               </p>
-             </div>
+        <p>Loading your Assets...</p>
+      </div>
     } else if (this.state.assets.length === 0) {
       return <div>
-               <p>
-                 No assets are available.
-               </p>
-             </div>
+        <p>No assets are available.</p>
+      </div>
     }
     return <div>
              <Search itemCount={this.state.assets.items.length} label='media assets' onChange={this.onChangeHandler} />
