@@ -8,7 +8,7 @@ function loadEntries (entries, {entryId, contentTypeId, contentTypeChanged} = {}
   return Promise.all([
     getClient().getEntries({
       content_type: contentTypeId,
-      skip: skip,
+      skip: skip || 0,
       limit: 100,
       order: 'sys.createdAt'
     }),
