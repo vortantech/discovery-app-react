@@ -1,6 +1,7 @@
 import React, { createClass } from 'react'
 import TwoPanelList, { Placeholder } from '../TwoPanelList'
 import ContentTypeListItem from './ContentTypeListItem'
+import LoadingIndicator from '../LoadingIndicator'
 
 export default createClass({
   componentDidMount () {
@@ -8,12 +9,12 @@ export default createClass({
   },
   render () {
     if (this.props.contentTypes.fetching === true) {
-      return <p>Loading your Content Types...</p>
+      return <LoadingIndicator text='Loading your Content Types...' />
     } else {
       const listTitle = <h3>Content Types</h3>
       const placeholder = <Placeholder content='Please select your Content Type.' />
 
-      return <TwoPanelList items={[{items: this.props.contentTypes.payload, TitleView: listTitle, ListView: ContentTypeListItem}]} 
+      return <TwoPanelList items={[{items: this.props.contentTypes.payload, TitleView: listTitle, ListView: ContentTypeListItem}]}
       ContentView={placeholder}
       location={this.props.location} />
     }

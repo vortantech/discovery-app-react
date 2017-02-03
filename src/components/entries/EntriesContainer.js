@@ -4,6 +4,7 @@ import EntryListItem from './EntryListItem'
 import Entry from './Entry'
 import FeaturelessButton from '../FeaturelessButton'
 import ContentTypeListItem from '../content-types/ContentTypeListItem'
+import LoadingIndicator from '../LoadingIndicator'
 
 let currentContentTypeID
 export default createClass({
@@ -41,9 +42,7 @@ export default createClass({
   render () {
     const {entries} = this.props
     if (entries.fetching === true) {
-      return <p>
-               Loading your Entries....
-      </p>
+      return <LoadingIndicator text='Loading your Entries...' />
     }
     let contentElement, loadMoreElement
     const contentTypeListTitle = <h3>Content Types</h3>
