@@ -24,7 +24,7 @@ export default createClass({
     if (this.state.phase === 'loading') {
       return <LoadingIndicator text='Loading your Asset...' />
     } else {
-      return <Asset asset={this.state.asset}/>
+      return <Asset asset={this.state.asset} />
     }
   }
 })

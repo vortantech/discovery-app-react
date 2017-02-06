@@ -2,7 +2,6 @@ import React, { createClass } from 'react'
 import TwoPanelList, { Placeholder } from '../TwoPanelList'
 import EntryListItem from './EntryListItem'
 import Entry from './Entry'
-import FeaturelessButton from '../FeaturelessButton'
 import ContentTypeListItem from '../content-types/ContentTypeListItem'
 import LoadingIndicator from '../LoadingIndicator'
 
@@ -44,7 +43,7 @@ export default createClass({
     if (entries.fetching === true) {
       return <LoadingIndicator text='Loading your Entries...' />
     }
-    let contentElement, loadMoreElement
+    let contentElement
     const contentTypeListTitle = <h3>Content Types</h3>
     const entriesListTitle = <h3>Entries</h3>
     if (entries.entry) {
@@ -53,9 +52,6 @@ export default createClass({
       contentElement = <Placeholder content='Please select your Entry.' />
     }
 
-    if (entries.payload.len() < entries.total) {
-      loadMoreElement = <FeaturelessButton label='Load more' action={this.loadEntries} />
-    }
     return <TwoPanelList items={[{items: this.props.contentTypes.payload, TitleView: contentTypeListTitle, ListView: ContentTypeListItem}, {items: entries.payload.value, TitleView: entriesListTitle, ListView: EntryListItem}]} ContentView={contentElement} location={this.props.location} />
   }
 })

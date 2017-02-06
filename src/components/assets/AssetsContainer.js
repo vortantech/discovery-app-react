@@ -52,9 +52,9 @@ class AssetsContainer extends React.Component {
       </div>
     }
     return <div>
-             <Search itemCount={this.state.assets.items.length} label='media assets' onChange={this.onChangeHandler} />
-             <Assets items={this.state.assets.items} location={this.props.location} />
-           </div>
+      <Search itemCount={this.state.assets.items.length} label='media assets' onChange={this.onChangeHandler} />
+      <Assets items={this.state.assets.items} location={this.props.location} />
+    </div>
   }
 }
 

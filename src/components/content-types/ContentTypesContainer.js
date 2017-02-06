@@ -15,8 +15,8 @@ export default createClass({
       const placeholder = <Placeholder content='Please select your Content Type.' />
 
       return <TwoPanelList items={[{items: this.props.contentTypes.payload, TitleView: listTitle, ListView: ContentTypeListItem}]}
-      ContentView={placeholder}
-      location={this.props.location} />
+        ContentView={placeholder}
+        location={this.props.location} />
     }
   }
 })
